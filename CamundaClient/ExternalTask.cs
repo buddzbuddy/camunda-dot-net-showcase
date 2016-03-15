@@ -1,27 +1,26 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Camunda
 {
     public class ExternalTask
     {
-        public string ActivityId { get; set; }
-        public string ActivityInstanceId { get; set; }
-        public string Id { get; set; }
-        public Dictionary<String, Variable> Variables { get; set; }
+        public string activityId { get; set; }
+        public string activityInstanceId { get; set; }
+        public string id { get; set; }
+        public Dictionary<string, Variable> variables { get; set; }
+
+        public override string ToString()
+        {
+            return "ExternalTask [Id=" + id + ", ActivityId=" + activityId+"]";
+        }
     }
 
     public class Variable
     {
-        public String Type { get; set; }
-        public String Value { get; set; }
-        public String ValueInfo { get; set; }
+        // lower case to generate JSON we need
+        public string type { get; set; }
+        public object value { get; set; }
+        public object valueInfo { get; set; }
     }
 
 

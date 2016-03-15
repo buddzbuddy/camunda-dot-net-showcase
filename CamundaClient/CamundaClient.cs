@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Camunda
 {
@@ -31,9 +28,15 @@ namespace Camunda
             return new ExternalTaskService(this);
         }
 
-        public void init()
+        public void Startup()
         {
             this.StartWorkers();
+            this.RepositoryService().AutoDeploy();
+        }
+
+        public void Shutdown()
+        {
+            this.StopWorkers();
         }
 
         public void StartWorkers()
@@ -49,14 +52,22 @@ namespace Camunda
 
             foreach (var taskWorker in externalTaskWorkers)
             {
-                var workerTopicName = taskWorker.Attributes.First().TopicName;
-                Console.WriteLine("Register Task Worker for Topic '" + workerTopicName + "'");
+                var workerTopicName = taskWorker.Attributes.FirstOrDefault().TopicName;
+
+                string[] variablesToFetch = null;
+                var variableRequirements = taskWorker.Type.GetCustomAttributes(typeof(ExternalTaskVariableRequirements), true)
+                    .FirstOrDefault() as ExternalTaskVariableRequirements;                
+                if (variableRequirements!=null)
+                {
+                    variablesToFetch = variableRequirements.VariablesToFetch;
+                }
 
                 var constructor = taskWorker.Type.GetConstructor(Type.EmptyTypes);
                 Adapter adapter = (Adapter)constructor.Invoke(null);
 
                 // Now register it!
-                ExternalTaskWorker worker = new ExternalTaskWorker(ExternalTaskService(), workerTopicName, adapter);
+                Console.WriteLine("Register Task Worker for Topic '" + workerTopicName + "'");
+                ExternalTaskWorker worker = new ExternalTaskWorker(ExternalTaskService(), adapter, workerTopicName, variablesToFetch);
                 workers.Add(worker);
                 worker.StartWork();
             }

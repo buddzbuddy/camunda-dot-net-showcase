@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,28 +7,30 @@ namespace Camunda
 {
     class ExternalTaskWorker
     {
-        private String workerId = Guid.NewGuid().ToString();
+        private String workerId = Guid.NewGuid().ToString(); // TODO: Make configurable
         private String topicName;
+        private String[] variablesToFetch;
         private Adapter adapter;
         private ExternalTaskService service;
 
         private Timer taskQueryTimer;
-        private long pollingIntervalInMilliseconds = 5 * 1000; // every 10 seconds
+        private long pollingIntervalInMilliseconds = 1 * 1000; // every second
         private int maxDegreeOfParallelism = 2;
         private int maxTasksToFetchAtOnce = 10;
-        private long lockDurationInMilliseconds = 5* 60 * 1000; // 5 minutes
+        private long lockDurationInMilliseconds = 1 * 60 * 1000; // 1 minute
 
-        public ExternalTaskWorker(ExternalTaskService service, String topicName, Adapter adapter)
+        public ExternalTaskWorker(ExternalTaskService service, Adapter adapter, String topicName, String[] variablesToFetch)
         {
             this.adapter = adapter;
             this.topicName = topicName;
+            this.variablesToFetch = variablesToFetch;
             this.service = service;
         }
 
         public void DoPolling()
         {
             // Query External Tasks
-            IList<ExternalTask> tasks = service.FetchAndLockTasks(workerId, maxTasksToFetchAtOnce, topicName, lockDurationInMilliseconds, new List<String>());
+            IList<ExternalTask> tasks = service.FetchAndLockTasks(workerId, maxTasksToFetchAtOnce, topicName, lockDurationInMilliseconds, new List<string>(variablesToFetch));
 
             // run them in parallel with a max degree of parallelism
             Parallel.ForEach(
@@ -45,11 +45,20 @@ namespace Camunda
 
         private void Execute(ExternalTask externalTask)
         {
-            adapter.Execute(externalTask);
+            Dictionary < string, object>  resultVariables = new Dictionary<string, object>();
+            adapter.Execute(externalTask, ref resultVariables);
+
             // TODO: catch exception and handle it
 
             // report successfull execution
-            service.Complete(workerId, externalTask.Id, new List<Variable>());
+            Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
+            foreach (var variable in resultVariables)
+            {
+                Variable camundaVariable = new Variable();
+                camundaVariable.value = variable.Value;
+                variables.Add(variable.Key, camundaVariable);
+            }
+            service.Complete(workerId, externalTask.id, variables);
         }
 
         public void StartWork()

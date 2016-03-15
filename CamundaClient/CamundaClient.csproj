@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExternalTaskVariableRequirements.cs" />
     <Compile Include="ExternalTaskWorker.cs" />
     <Compile Include="ExternalTaskAdapter.cs" />
     <Compile Include="ExternalTaskService.cs" />

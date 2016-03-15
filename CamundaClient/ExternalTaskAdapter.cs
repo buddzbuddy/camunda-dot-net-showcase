@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Camunda
+﻿namespace Camunda
 {
     [System.AttributeUsage(System.AttributeTargets.Class |
                            System.AttributeTargets.Struct)
@@ -17,7 +11,5 @@ namespace Camunda
         {
             this.TopicName = topicName;
         }
-
-        //public object TopicName { get; internal set; }
     }
 }

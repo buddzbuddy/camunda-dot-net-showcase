@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Camunda
 {
@@ -19,7 +14,7 @@ namespace Camunda
             this.client = client;
         }
 
-        public IList<ExternalTask> FetchAndLockTasks(String workerId, int maxTasks, String topicName, long lockDurationInMilliseconds, List<String> variablesToFetch)
+        public IList<ExternalTask> FetchAndLockTasks(string workerId, int maxTasks, string topicName, long lockDurationInMilliseconds, List<string> variablesToFetch)
         {
             HttpClient http = client.HttpClient("external-task/fetchAndLock");
 
@@ -35,41 +30,36 @@ namespace Camunda
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
             if (response.IsSuccessStatusCode)
             {
-                // Successful - parse the response body
                 var tasks = response.Content.ReadAsAsync<IEnumerable<ExternalTask>>().Result;
                 return new List<ExternalTask>(tasks);
             }
             else
             {
-                //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
                 return new List<ExternalTask>();
             }
-
         }
 
         private class FetchAndLockRequest
         {
-            public String workerId;
+            public string workerId;
             public int maxTasks;
             public List<FetchAndLockTopic> topics = new List<FetchAndLockTopic>();
         }
 
-  
-
         private class FetchAndLockTopic
         {
-            public String topicName;
+            public string topicName;
             public long lockDuration;
-            public List<String> variables;
+            public List<string> variables;
         }
 
-        internal void Complete(string workerId, string externalTaskid, List<Variable> variablesToPassToProcess)
+        internal void Complete(string workerId, string externalTaskId, Dictionary<string, Variable> variablesToPassToProcess)
         {
-            HttpClient http = client.HttpClient("external-task/"+externalTaskid+"/complete");
+            HttpClient http = client.HttpClient("external-task/" + externalTaskId + "/complete");
 
             CompleteRequest request = new CompleteRequest();
             request.workerId = workerId;
-            //request.variables = variablesToPassToProcess;
+            request.variables = variablesToPassToProcess;
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
             if (!response.IsSuccessStatusCode)
@@ -81,7 +71,7 @@ namespace Camunda
 
         private class CompleteRequest
         {
-            public List<Variable> variables { get; set; }
+            public Dictionary<string, Variable> variables { get; set; }
             public string workerId { get; set; }
         }
 
