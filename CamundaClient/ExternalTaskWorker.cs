@@ -46,7 +46,10 @@ namespace Camunda
         private void Execute(ExternalTask externalTask)
         {
             Dictionary < string, object>  resultVariables = new Dictionary<string, object>();
+
+            Console.WriteLine("Execute External Task from topic '" + topicName + "': " + externalTask + "..");
             adapter.Execute(externalTask, ref resultVariables);
+            Console.WriteLine("..finished External Task " + externalTask.id);
 
             // TODO: catch exception and handle it
 

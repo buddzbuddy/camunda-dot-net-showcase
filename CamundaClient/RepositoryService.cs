@@ -53,6 +53,9 @@ namespace Camunda
             // Create request and receive response
             string postURL = camundaClient.URL + "deployment/create";
             HttpWebResponse webResponse = FormUpload.MultipartFormDataPost(postURL, postParameters);
+
+            Console.WriteLine("Deployment to Camunda BPM succeeded.");
+
         }
 
     }

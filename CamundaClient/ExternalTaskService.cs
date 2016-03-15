@@ -26,15 +26,21 @@ namespace Camunda
             topic.lockDuration = lockDurationInMilliseconds;
             topic.variables = variablesToFetch;
             request.topics.Add(topic);
-
-            HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
-            if (response.IsSuccessStatusCode)
-            {
-                var tasks = response.Content.ReadAsAsync<IEnumerable<ExternalTask>>().Result;
-                return new List<ExternalTask>(tasks);
+            try {
+                HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var tasks = response.Content.ReadAsAsync<IEnumerable<ExternalTask>>().Result;
+                    return new List<ExternalTask>(tasks);
+                }
+                else
+                {
+                    return new List<ExternalTask>();
+                }
             }
-            else
+            catch (Exception ex)
             {
+                // TODO: Handle Exception, add backoff
                 return new List<ExternalTask>();
             }
         }
