@@ -1,0 +1,42 @@
+﻿<Window x:Class="InsuranceApplicationWpfTasklist.TasklistWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InsuranceApplicationWpfTasklist"
+        mc:Ignorable="d"
+        Title="Camunda Tasklist">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="100*"/>
+        </Grid.ColumnDefinitions>
+        <ToolBar x:Name="toolBar">
+            <Button x:Name="buttonReload" Content="Reload Tasks" Height="Auto" VerticalAlignment="Top" Width="Auto" Click="buttonReload_Click"/>
+            <Button x:Name="buttonStartInsuranceApplication" Content="Start New Insurance Application" Height="Auto" VerticalAlignment="Stretch" Width="Auto" Click="buttonStartInsuranceApplication_Click"/>
+        </ToolBar>
+        <Label x:Name="label1" Content="" Grid.Column="1"/>
+        <ListView x:Name="taskListView" Grid.Row="1" MouseDoubleClick="taskListView_DoubleClick" SelectionMode="Single" SelectionChanged="taskListView_SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Prio" DisplayMemberBinding="{Binding Path=priority}" />
+                    <GridViewColumn Header="Task" DisplayMemberBinding="{Binding Path=name}" />
+                    <GridViewColumn Header="Assignee" DisplayMemberBinding="{Binding Path=assignee}"/>
+                    <GridViewColumn Header="Due Date" DisplayMemberBinding="{Binding Path=dueDate}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <TabControl x:Name="tabControl" Grid.Column="1" Grid.Row="1">
+            <TabItem x:Name="TabForm" Header="Form">
+                <Frame x:Name="taskFormFrame" Content="Frame" NavigationUIVisibility="Hidden" />
+            </TabItem>
+            <TabItem x:Name="TabDiagram" Header="Diagram">
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

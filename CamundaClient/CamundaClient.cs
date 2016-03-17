@@ -13,6 +13,11 @@ namespace Camunda
 
         private IList<ExternalTaskWorker> workers = new List<ExternalTaskWorker>();
 
+        public BpmnWorkflowService BpmnWorkflowService()
+        {
+            return new BpmnWorkflowService(this);
+        }
+
         public HumanTaskService HumanTaskService()
         {
             return new HumanTaskService(this);
@@ -46,9 +51,9 @@ namespace Camunda
             var externalTaskWorkers =
                 // from assembly in AppDomain.CurrentDomain.GetAssemblies()
                 from t in assembly.GetTypes()
-                let attributes = t.GetCustomAttributes(typeof(ExternalTaskAdapter), true)
+                let attributes = t.GetCustomAttributes(typeof(ExternalTaskTopic), true)
                 where attributes != null && attributes.Length > 0
-                select new { Type = t, Attributes = attributes.Cast<ExternalTaskAdapter>() };
+                select new { Type = t, Attributes = attributes.Cast<ExternalTaskTopic>() };
 
             foreach (var taskWorker in externalTaskWorkers)
             {
@@ -56,14 +61,14 @@ namespace Camunda
 
                 string[] variablesToFetch = null;
                 var variableRequirements = taskWorker.Type.GetCustomAttributes(typeof(ExternalTaskVariableRequirements), true)
-                    .FirstOrDefault() as ExternalTaskVariableRequirements;                
-                if (variableRequirements!=null)
+                    .FirstOrDefault() as ExternalTaskVariableRequirements;
+                if (variableRequirements != null)
                 {
                     variablesToFetch = variableRequirements.VariablesToFetch;
                 }
 
                 var constructor = taskWorker.Type.GetConstructor(Type.EmptyTypes);
-                Adapter adapter = (Adapter)constructor.Invoke(null);
+                ExternalTaskAdapter adapter = (ExternalTaskAdapter)constructor.Invoke(null);
 
                 // Now register it!
                 Console.WriteLine("Register Task Worker for Topic '" + workerTopicName + "'");
@@ -81,6 +86,8 @@ namespace Camunda
             }
         }
 
+        // HELPER METHODS
+
         public HttpClient HttpClient(string path)
         {
             HttpClient client = new HttpClient();
@@ -93,6 +100,17 @@ namespace Camunda
             return client;
         }
 
-
+        public Dictionary<string, Variable> convertVariables(Dictionary<string, object> variables)
+        {
+            // report successfull execution
+            Dictionary<string, Variable> result = new Dictionary<string, Variable>();
+            foreach (var variable in variables)
+            {
+                Variable camundaVariable = new Variable();
+                camundaVariable.value = variable.Value;
+                result.Add(variable.Key, camundaVariable);
+            }
+            return result;
+        }
     }
 }

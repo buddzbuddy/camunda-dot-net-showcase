@@ -3,7 +3,7 @@
 namespace Camunda
 {
 
-    public interface Adapter
+    public interface ExternalTaskAdapter
     {
         void Execute(ExternalTask externalTask, ref Dictionary<string, object> resultVariables);
     }

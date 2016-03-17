@@ -29,7 +29,7 @@ namespace SimpleCalculationProcess
             var tasks = camunda.HumanTaskService().LoadTasks();
             foreach (var task in tasks)
             {
-                Console.WriteLine(task.Name);
+                Console.WriteLine(task.name);
             }
         }
 

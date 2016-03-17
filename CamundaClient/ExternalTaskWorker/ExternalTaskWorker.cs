@@ -10,7 +10,7 @@ namespace Camunda
         private String workerId = Guid.NewGuid().ToString(); // TODO: Make configurable
         private String topicName;
         private String[] variablesToFetch;
-        private Adapter adapter;
+        private ExternalTaskAdapter adapter;
         private ExternalTaskService service;
 
         private Timer taskQueryTimer;
@@ -19,7 +19,7 @@ namespace Camunda
         private int maxTasksToFetchAtOnce = 10;
         private long lockDurationInMilliseconds = 1 * 60 * 1000; // 1 minute
 
-        public ExternalTaskWorker(ExternalTaskService service, Adapter adapter, String topicName, String[] variablesToFetch)
+        public ExternalTaskWorker(ExternalTaskService service, ExternalTaskAdapter adapter, String topicName, String[] variablesToFetch)
         {
             this.adapter = adapter;
             this.topicName = topicName;
@@ -53,15 +53,8 @@ namespace Camunda
 
             // TODO: catch exception and handle it
 
-            // report successfull execution
-            Dictionary<string, Variable> variables = new Dictionary<string, Variable>();
-            foreach (var variable in resultVariables)
-            {
-                Variable camundaVariable = new Variable();
-                camundaVariable.value = variable.Value;
-                variables.Add(variable.Key, camundaVariable);
-            }
-            service.Complete(workerId, externalTask.id, variables);
+
+            service.Complete(workerId, externalTask.id, resultVariables);
         }
 
         public void StartWork()

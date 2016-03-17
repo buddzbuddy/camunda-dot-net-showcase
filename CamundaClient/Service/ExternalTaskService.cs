@@ -59,13 +59,13 @@ namespace Camunda
             public List<string> variables;
         }
 
-        internal void Complete(string workerId, string externalTaskId, Dictionary<string, Variable> variablesToPassToProcess)
+        internal void Complete(string workerId, string externalTaskId, Dictionary<string, object> variablesToPassToProcess)
         {
             HttpClient http = client.HttpClient("external-task/" + externalTaskId + "/complete");
 
             CompleteRequest request = new CompleteRequest();
             request.workerId = workerId;
-            request.variables = variablesToPassToProcess;
+            request.variables = client.convertVariables(variablesToPassToProcess);
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
             if (!response.IsSuccessStatusCode)

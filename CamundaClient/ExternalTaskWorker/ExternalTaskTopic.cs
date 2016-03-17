@@ -3,11 +3,11 @@
     [System.AttributeUsage(System.AttributeTargets.Class |
                            System.AttributeTargets.Struct)
     ]
-    public class ExternalTaskAdapter : System.Attribute
+    public class ExternalTaskTopic : System.Attribute
     {
         public string TopicName;
 
-        public ExternalTaskAdapter(string topicName)
+        public ExternalTaskTopic(string topicName)
         {
             this.TopicName = topicName;
         }

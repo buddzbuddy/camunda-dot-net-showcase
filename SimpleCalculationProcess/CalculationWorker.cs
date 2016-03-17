@@ -4,9 +4,9 @@ using Camunda;
 
 namespace SimpleCalculationProcess
 {
-    [ExternalTaskAdapter("calculate")]
+    [ExternalTaskTopic("calculate")]
     [ExternalTaskVariableRequirements("x", "y")]
-    class CalculationAdapter : Adapter
+    class CalculationAdapter : ExternalTaskAdapter
     {
 
         public void Execute(ExternalTask externalTask, ref Dictionary<string, object> resultVariables)
@@ -16,7 +16,6 @@ namespace SimpleCalculationProcess
             long result = x + y;
             resultVariables.Add("result", result);
         }
-
 
     }
 }
