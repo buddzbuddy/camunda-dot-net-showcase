@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
 using Camunda;
-using System;
+using System.Windows;
 
 namespace InsuranceApplicationWpfTasklist.TaskForms
 {
@@ -10,8 +10,10 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
     /// </summary>
     public partial class DecideAboutApplication : Page, CamundaTaskForm
     {
-
-        public Dictionary<string, object> Variables { get; set; }
+        private CamundaClient Camunda;
+        private HumanTask Task;
+        public Dictionary<string, object> TaskVariables { get; set; }
+        public Dictionary<string, object> NewVariables { get; set; }
 
         public DecideAboutApplication()
         {
@@ -21,9 +23,17 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
 
         public void initialize(CamundaClient Camunda, HumanTask task)
         {
-            Variables = Camunda.HumanTaskService().LoadVariables(task.id);
-            Console.WriteLine(Variables);
+            this.Camunda = Camunda;
+            this.Task = task;
+            TaskVariables = Camunda.HumanTaskService().LoadVariables(task.id);
+            NewVariables = new Dictionary<string, object>();
+            NewVariables.Add("approved", false);
         }
 
+        private void buttonCompleteTaskl_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Camunda.HumanTaskService().Complete(Task.id, NewVariables);
+            Visibility = Visibility.Hidden;
+        }
     }
 }

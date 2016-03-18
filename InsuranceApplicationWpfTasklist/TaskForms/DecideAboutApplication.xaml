@@ -19,22 +19,28 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Label Content="Name" Grid.Column="0" Grid.Row="0" />
-        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Variables[name]}" />
+        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding TaskVariables[name]}" />
         
         <Label Content="Alter" Grid.Column="0" Grid.Row="1" />
-        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Variables[age]}" />
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding TaskVariables[age]}" />
 
         <Label Content="KFZ Hersteller" Grid.Column="0" Grid.Row="2" />
-        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Variables[carManufacturer]}" />
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding TaskVariables[carManufacturer]}" />
 
         <Label Content="KFZ Typ" Grid.Column="0" Grid.Row="3" />
-        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Variables[carType]}" />
+        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding TaskVariables[carType]}" />
 
         <Label Content="Risiko" Grid.Column="0" Grid.Row="4" />
         <TextBox  Grid.Column="1" Grid.Row="4" />
 
+        <Label Content="Entscheidung" Grid.Column="0" Grid.Row="5" />
+        <CheckBox Grid.Column="1" Grid.Row="5" Height="Auto" IsChecked="{Binding NewVariables[approved]}" VerticalAlignment="Center" />
+
+        <Button x:Name="buttonStartProcessInstance" Content="Complete Task"  Grid.Column="1" Grid.Row="6" Height="Auto" Click="buttonCompleteTaskl_Click" />
     </Grid>
 </Page>

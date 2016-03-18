@@ -69,7 +69,7 @@ namespace Camunda
 
         public void Complete(String taskId, Dictionary<string, object> variables)
         {
-            HttpClient http = client.HttpClient("/task/" + taskId + "/complete");
+            HttpClient http = client.HttpClient("task/" + taskId + "/complete");
 
             CompleteTaskRequest request = new CompleteTaskRequest();
             request.variables = client.convertVariables(variables);

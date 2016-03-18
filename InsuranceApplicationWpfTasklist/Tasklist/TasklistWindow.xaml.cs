@@ -25,7 +25,7 @@ namespace InsuranceApplicationWpfTasklist
 
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            Camunda.Shutdown();           
+            Camunda.Shutdown();
         }
 
         private void buttonReload_Click(object sender, RoutedEventArgs e)
@@ -42,9 +42,20 @@ namespace InsuranceApplicationWpfTasklist
         private void taskListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             HumanTask task = (HumanTask)taskListView.SelectedItem;
-            CamundaTaskForm taskFormPage = (CamundaTaskForm) Activator.CreateInstance(Type.GetType(task.formKey));
-            taskFormPage.initialize(Camunda, task);
-            taskFormFrame.Content = taskFormPage;
+            if (task == null)
+            {
+                taskFormFrame.Content = null;
+                return;
+            }
+            try {
+                CamundaTaskForm taskFormPage = (CamundaTaskForm)Activator.CreateInstance(Type.GetType(task.formKey));
+                taskFormPage.initialize(Camunda, task);
+                taskFormFrame.Content = taskFormPage;
+            } catch (Exception ex) {
+                // Could not load form - maybe no task for .NET tasklist!
+                // TODO: Do something?
+                taskFormFrame.Content = null;
+            }
         }
 
         private void buttonStartInsuranceApplication_Click(object sender, RoutedEventArgs e)
