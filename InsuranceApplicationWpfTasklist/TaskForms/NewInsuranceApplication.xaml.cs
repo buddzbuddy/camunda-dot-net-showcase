@@ -10,7 +10,7 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
     /// </summary>
     public partial class NewInsuranceApplication : Page, CamundaStartForm
     {
-        private CamundaClient Camunda;
+        private TasklistWindow Tasklist;
         private ProcessDefinition ProcessDefinition;
         public Dictionary<string, object> Variables { get; set;}
 
@@ -21,16 +21,18 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
             DataContext = this;
         }
 
-        public void initialize(CamundaClient Camunda, ProcessDefinition ProcessDefinition)
+        public void initialize(TasklistWindow tasklist, ProcessDefinition ProcessDefinition)
         {
-            this.Camunda = Camunda;
+            this.Tasklist = tasklist;
             this.ProcessDefinition = ProcessDefinition;
         }
 
         private void buttonStartProcessInstance_Click(object sender, RoutedEventArgs e)
         {
-            Camunda.BpmnWorkflowService().StartProcessInstance(ProcessDefinition.key, Variables);
+            Tasklist.Camunda.BpmnWorkflowService().StartProcessInstance(ProcessDefinition.key, Variables);
             Visibility = Visibility.Hidden;
+            Tasklist.reloadTasks();
         }
+
     }
 }

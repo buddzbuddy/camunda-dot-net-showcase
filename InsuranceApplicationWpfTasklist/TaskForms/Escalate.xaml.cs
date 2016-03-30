@@ -10,7 +10,8 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
     /// </summary>
     public partial class Escalate : Page, CamundaTaskForm
     {
-
+        private TasklistWindow Tasklist;
+        private HumanTask Task;
         public Dictionary<string, object> Variables { get; set; }
 
         public Escalate()
@@ -19,10 +20,12 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
             DataContext = this;
         }
 
-        public void initialize(CamundaClient Camunda, HumanTask task)
+        public void initialize(TasklistWindow tasklist, HumanTask task)
         {
-            Variables = Camunda.HumanTaskService().LoadVariables(task.id);
-            Console.WriteLine(Variables);
+            this.Tasklist = tasklist;
+            this.Task = task;
+
+            Variables = Tasklist.Camunda.HumanTaskService().LoadVariables(task.id);
         }
 
     }

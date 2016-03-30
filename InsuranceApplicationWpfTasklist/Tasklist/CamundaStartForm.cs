@@ -6,6 +6,6 @@ namespace InsuranceApplicationWpfTasklist
 {
     internal interface CamundaStartForm
     {
-        void initialize(CamundaClient Camunda, ProcessDefinition processDefinition);
+        void initialize(TasklistWindow taskist, ProcessDefinition processDefinition);
     }
 }

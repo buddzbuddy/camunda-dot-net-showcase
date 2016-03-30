@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -9,9 +10,23 @@ namespace Camunda
 
     public class CamundaClient
     {
-        public string URL = "http://localhost:8080/engine-rest/engine/default/";
+        public string DEFAULT_URL = "http://localhost:8080/engine-rest/engine/default/";
 
         private IList<ExternalTaskWorker> workers = new List<ExternalTaskWorker>();
+        public string RestUrl { get; }
+        public string RestUsername { get; }
+        public string RestPassword { get; }
+
+        public CamundaClient()
+        {
+            this.RestUrl = DEFAULT_URL;
+        }
+        public CamundaClient(string restUrl, string username, string password)
+        {
+            this.RestUrl = restUrl;
+            this.RestUsername = username;
+            this.RestPassword = password;
+        }
 
         public BpmnWorkflowService BpmnWorkflowService()
         {
@@ -90,8 +105,17 @@ namespace Camunda
 
         public HttpClient HttpClient(string path)
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(URL + path);
+            HttpClient client = null;
+            if (RestUsername != null)
+            {
+                var credentials = new NetworkCredential(RestUsername, RestPassword);
+                client = new HttpClient(new HttpClientHandler() { Credentials = credentials });
+            }
+            else
+            {
+                client = new HttpClient();
+            }
+            client.BaseAddress = new Uri(RestUrl + path);
 
             // Add an Accept header for JSON format.
             client.DefaultRequestHeaders.Accept.Add(

@@ -51,8 +51,8 @@ namespace Camunda
             postParameters.Add("data", files);
 
             // Create request and receive response
-            string postURL = camundaClient.URL + "deployment/create";
-            HttpWebResponse webResponse = FormUpload.MultipartFormDataPost(postURL, postParameters);
+            string postURL = camundaClient.RestUrl + "deployment/create";
+            HttpWebResponse webResponse = FormUpload.MultipartFormDataPost(postURL, camundaClient.RestUsername, camundaClient.RestPassword, postParameters);
 
             Console.WriteLine("Deployment to Camunda BPM succeeded.");
 
@@ -67,17 +67,17 @@ namespace Camunda
     {
         private static readonly Encoding encoding = Encoding.UTF8;
 
-        public static HttpWebResponse MultipartFormDataPost(string postUrl, Dictionary<string, object> postParameters)
+        public static HttpWebResponse MultipartFormDataPost(string postUrl, string username, string password, Dictionary<string, object> postParameters)
         {
             string formDataBoundary = String.Format("----------{0:N}", Guid.NewGuid());
             string contentType = "multipart/form-data; boundary=" + formDataBoundary;
 
             byte[] formData = GetMultipartFormData(postParameters, formDataBoundary);
 
-            return PostForm(postUrl, contentType, formData);
+            return PostForm(postUrl, username, password, contentType, formData);
         }
 
-        private static HttpWebResponse PostForm(string postUrl, string contentType, byte[] formData)
+        private static HttpWebResponse PostForm(string postUrl, string username, string password, string contentType, byte[] formData)
         {
             HttpWebRequest request = WebRequest.Create(postUrl) as HttpWebRequest;
 
@@ -94,9 +94,12 @@ namespace Camunda
             request.ContentLength = formData.Length;
 
             // You could add authentication here as well if needed:
-            // request.PreAuthenticate = true;
-            // request.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
-            // request.Headers.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.Encoding.Default.GetBytes("username" + ":" + "password")));
+            if (username != null)
+            {
+                request.PreAuthenticate = true;
+                request.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+                request.Headers.Add("Authorization", "Basic " + Convert.ToBase64String(System.Text.Encoding.Default.GetBytes(username + ":" + password)));
+            }
 
             // Send the form data to the request.
             using (Stream requestStream = request.GetRequestStream())

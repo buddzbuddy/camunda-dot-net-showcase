@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Camunda;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace InsuranceApplicationWpfTasklist
 {
@@ -12,7 +13,7 @@ namespace InsuranceApplicationWpfTasklist
     public partial class TasklistWindow : Window
     {
 
-        private CamundaClient Camunda;
+        public CamundaClient Camunda { get; }
 
         public TasklistWindow()
         {
@@ -23,6 +24,16 @@ namespace InsuranceApplicationWpfTasklist
             Closing += OnWindowClosing;
         }
 
+        public void reloadTasks()
+        {
+            var tasks = Camunda.HumanTaskService().LoadTasks();
+            taskListView.ItemsSource = tasks;
+
+            Assembly thisExe = Assembly.GetEntryAssembly();
+            var htmlStream = thisExe.GetManifestResourceStream("InsuranceApplicationWpfTasklist.Tasklist.diagram.html");
+            DiagramBrowser.NavigateToStream(htmlStream);
+        }
+
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
             Camunda.Shutdown();
@@ -30,8 +41,7 @@ namespace InsuranceApplicationWpfTasklist
 
         private void buttonReload_Click(object sender, RoutedEventArgs e)
         {
-            var tasks = Camunda.HumanTaskService().LoadTasks();
-            taskListView.ItemsSource = tasks;
+            reloadTasks();
         }
 
         private void taskListView_DoubleClick(object sender, EventArgs e)
@@ -49,7 +59,7 @@ namespace InsuranceApplicationWpfTasklist
             }
             try {
                 CamundaTaskForm taskFormPage = (CamundaTaskForm)Activator.CreateInstance(Type.GetType(task.formKey));
-                taskFormPage.initialize(Camunda, task);
+                taskFormPage.initialize(this, task);
                 taskFormFrame.Content = taskFormPage;
             } catch (Exception ex) {
                 // Could not load form - maybe no task for .NET tasklist!
@@ -66,7 +76,7 @@ namespace InsuranceApplicationWpfTasklist
             processDefinition.startFormKey = "InsuranceApplicationWpfTasklist.TaskForms.NewInsuranceApplication";
 
             CamundaStartForm startFormPage = (CamundaStartForm)Activator.CreateInstance(Type.GetType(processDefinition.startFormKey));
-            startFormPage.initialize(Camunda, processDefinition);
+            startFormPage.initialize(this, processDefinition);
             taskFormFrame.Content = startFormPage;
 
         }

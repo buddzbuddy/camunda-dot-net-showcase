@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +52,18 @@ namespace Camunda
                 Dictionary < string, object>  variables = new Dictionary<string, object>();
                 foreach (var variable in variableResponse)
                 {
-                    variables.Add(variable.Key, variable.Value.value);
+                    if (variable.Value.type=="object")
+                    {
+                        string stringValue = (string)variable.Value.value;
+                        // lets assume we only work with JSON serialized values 
+                        stringValue = stringValue.Remove(stringValue.Length - 1).Remove(0, 1); // remove one bracket from {{ and }}
+                        JToken jsonObject = JContainer.Parse(stringValue);
+
+                        variables.Add(variable.Key, jsonObject);
+                    }
+                    else { 
+                        variables.Add(variable.Key, variable.Value.value);
+                    }
                 }
                 return variables;
             }

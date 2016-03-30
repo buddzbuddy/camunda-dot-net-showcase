@@ -24,19 +24,19 @@
         </Grid.RowDefinitions>
 
         <Label Content="Name" Grid.Column="0" Grid.Row="0" />
-        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding TaskVariables[name]}" />
+        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding TaskVariables[name]}" IsReadOnly="True" />
         
         <Label Content="Alter" Grid.Column="0" Grid.Row="1" />
-        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding TaskVariables[age]}" />
+        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding TaskVariables[age]}" IsReadOnly="True" />
 
         <Label Content="KFZ Hersteller" Grid.Column="0" Grid.Row="2" />
-        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding TaskVariables[carManufacturer]}" />
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding TaskVariables[carManufacturer]}" IsReadOnly="True" />
 
         <Label Content="KFZ Typ" Grid.Column="0" Grid.Row="3" />
-        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding TaskVariables[carType]}" />
+        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding TaskVariables[carType]}" IsReadOnly="True" />
 
         <Label Content="Risiko" Grid.Column="0" Grid.Row="4" />
-        <TextBox  Grid.Column="1" Grid.Row="4" />
+        <TextBox  Grid.Column="1" Grid.Row="4" Text="{Binding TaskVariables[risk].description}" IsReadOnly="True"/>
 
         <Label Content="Entscheidung" Grid.Column="0" Grid.Row="5" />
         <CheckBox Grid.Column="1" Grid.Row="5" Height="Auto" IsChecked="{Binding NewVariables[approved]}" VerticalAlignment="Center" />

@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using Camunda;
 using System.Windows;
+using Newtonsoft.Json.Linq;
 
 namespace InsuranceApplicationWpfTasklist.TaskForms
 {
@@ -10,7 +11,7 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
     /// </summary>
     public partial class DecideAboutApplication : Page, CamundaTaskForm
     {
-        private CamundaClient Camunda;
+        private TasklistWindow Tasklist;
         private HumanTask Task;
         public Dictionary<string, object> TaskVariables { get; set; }
         public Dictionary<string, object> NewVariables { get; set; }
@@ -21,19 +22,20 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
             DataContext = this;
         }
 
-        public void initialize(CamundaClient Camunda, HumanTask task)
+        public void initialize(TasklistWindow tasklist, HumanTask task)
         {
-            this.Camunda = Camunda;
+            this.Tasklist = tasklist;
             this.Task = task;
-            TaskVariables = Camunda.HumanTaskService().LoadVariables(task.id);
+            TaskVariables = Tasklist.Camunda.HumanTaskService().LoadVariables(task.id);
             NewVariables = new Dictionary<string, object>();
             NewVariables.Add("approved", false);
         }
 
         private void buttonCompleteTaskl_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Camunda.HumanTaskService().Complete(Task.id, NewVariables);
+            Tasklist.Camunda.HumanTaskService().Complete(Task.id, NewVariables);
             Visibility = Visibility.Hidden;
+            Tasklist.reloadTasks();
         }
     }
 }
