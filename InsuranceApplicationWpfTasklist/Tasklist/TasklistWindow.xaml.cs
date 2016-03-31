@@ -21,6 +21,7 @@ namespace InsuranceApplicationWpfTasklist
             DataContext = this;
             Camunda = new CamundaClient();
             Camunda.Startup();
+            reloadTasks();
             Closing += OnWindowClosing;
         }
 
@@ -28,10 +29,11 @@ namespace InsuranceApplicationWpfTasklist
         {
             var tasks = Camunda.HumanTaskService().LoadTasks();
             taskListView.ItemsSource = tasks;
-
+            /*
             Assembly thisExe = Assembly.GetEntryAssembly();
             var htmlStream = thisExe.GetManifestResourceStream("InsuranceApplicationWpfTasklist.Tasklist.diagram.html");
             DiagramBrowser.NavigateToStream(htmlStream);
+            */
         }
 
         public void OnWindowClosing(object sender, CancelEventArgs e)
@@ -72,7 +74,7 @@ namespace InsuranceApplicationWpfTasklist
         {
             // TODO Load from process definition
             ProcessDefinition processDefinition = new ProcessDefinition();
-            processDefinition.key = "insuranceApplication.NET";
+            processDefinition.key = "insuranceApplication.WPF";
             processDefinition.startFormKey = "InsuranceApplicationWpfTasklist.TaskForms.NewInsuranceApplication";
 
             CamundaStartForm startFormPage = (CamundaStartForm)Activator.CreateInstance(Type.GetType(processDefinition.startFormKey));

@@ -71,7 +71,23 @@ namespace Camunda
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Could not complete external Task: " + response.ReasonPhrase);
-                //TODO raise exception
+            }
+        }
+
+        internal void Failure(string workerId, string externalTaskId, string errorMessage, int retries, long retryTimeout)
+        {
+            HttpClient http = client.HttpClient("external-task/" + externalTaskId + "/failure");
+
+            FailureRequest request = new FailureRequest();
+            request.workerId = workerId;
+            request.errorMessage = errorMessage;
+            request.retries = retries;
+            request.retryTimeout = retryTimeout;
+
+            HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Could not report failure for external Task: " + response.ReasonPhrase);
             }
         }
 
@@ -80,7 +96,13 @@ namespace Camunda
             public Dictionary<string, Variable> variables { get; set; }
             public string workerId { get; set; }
         }
-
+        private class FailureRequest
+        {
+            public string workerId { get; set; }
+            public string errorMessage { get; set; }
+            public int retries { get; set; }
+            public long retryTimeout{ get; set; }
+        }
     }
 
 }

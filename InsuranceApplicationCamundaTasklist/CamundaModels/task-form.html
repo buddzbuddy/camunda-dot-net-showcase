@@ -1,33 +1,88 @@
-<strong>Here you would put the actual form to work on the task</strong>
-
 <p>
-  You can use this form through Camunda Tasklist
-  by setting the formKey of a BPMN User Task to:
-  <code>embedded:app:forms/task-form.html</code>
+    Please decide about the following application for car insurance. HALLO!
 </p>
-
 <form class="form-horizontal">
-  <div class="control-group">
-    <label class="control-label">Name</label>
-    <div class="controls">
-      <input type="text" 
-             cam-variable-name="name"
-             readonly="true" 
-             class="form-control" />      
+    <script cam-script type="text/form-script">
+        console.log( "Hallo" );
+        camForm.on('form-loaded', function() {
+          console.log( "form loaded" );
+          // tell the form SDK to fetch the variable named 'customer'
+          camForm.variableManager.fetchVariable('risk');
+        });
+        camForm.on('variables-fetched', function() {
+          // work with the variable (bind it to the current AngularJS $scope)
+          $scope.risk = camForm.variableManager.variableValue('risk');
+          console.log( $scope.risk );
+        });
+    </script>
+    <div class="control-group">
+        <label class="control-label">Name</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="name"
+                   cam-variable-type="String"
+                   readonly="true"
+                   class="form-control" />
+        </div>
     </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label">Approve?</label>
-    <div class="controls">
-      <input type="checkbox"
-             cam-variable-name="approved"
-             cam-variable-type="Boolean"
-             name="approved"
-             class="form-control" />
+    <div class="control-group">
+        <label class="control-label">E-Mail</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="email"
+                   cam-variable-type="String"
+                   readonly="true"
+                   class="form-control" />
+        </div>
     </div>
-  </div>
-
-  <script cam-script type="text/form-script">
-  // custom JavaScript goes here
-  </script>
+    <div class="control-group">
+        <label class="control-label">Age</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="age"
+                   cam-variable-type="Integer"
+                   readonly="true"
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Car Manufacturer</label>
+        <div class="controls">
+            <select cam-variable-name="carManufacturer"
+                    cam-variable-type="String"
+                    disabled="true">
+                <option>BMW</option>
+                <option>Porsche</option>
+                <option>VW</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Car Type</label>
+        <div class="controls">
+            <select cam-variable-name="carType"
+                    cam-variable-type="String"
+                    disabled="true">
+                <option>X3</option>
+                <option>911</option>
+                <option>Golf 5</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Discovered Risk</label>
+        <div class="controls">
+            <input type="text" ng-model="risk.description" readonly="true" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Approve?</label>
+        <div class="controls">
+            <input type="checkbox"
+                   cam-variable-name="approved"
+                   cam-variable-type="Boolean"
+                   name="approved"
+                   class="form-control" />
+        </div>
+    </div>
 </form>

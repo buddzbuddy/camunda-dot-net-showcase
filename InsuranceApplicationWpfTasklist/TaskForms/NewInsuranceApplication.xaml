@@ -38,10 +38,15 @@
         <ComboBox Grid.Column="1" Grid.Row="3" Text="{Binding Variables[carManufacturer]}" >
             <System:String>BMW</System:String>
             <System:String>Porsche</System:String>
+            <System:String>VW</System:String>
         </ComboBox>
 
         <Label Content="KFZ Typ" Grid.Column="0" Grid.Row="4" />
-        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Variables[carType]}" />
+        <ComboBox Grid.Column="1" Grid.Row="4" Text="{Binding Variables[carType]}" >
+            <System:String>X3</System:String>
+            <System:String>911</System:String>
+            <System:String>Golf 5</System:String>
+        </ComboBox>
 
         <Button x:Name="buttonStartProcessInstance" Content="Create Application"  Grid.Column="1" Grid.Row="5" Height="Auto" Click="buttonStartProcessInstance_Click" />
     </Grid>

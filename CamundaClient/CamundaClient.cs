@@ -73,6 +73,8 @@ namespace Camunda
             foreach (var taskWorker in externalTaskWorkers)
             {
                 var workerTopicName = taskWorker.Attributes.FirstOrDefault().TopicName;
+                var retries = taskWorker.Attributes.FirstOrDefault().Retries;
+                var retryTimeout = taskWorker.Attributes.FirstOrDefault().RetryTimeout;
 
                 string[] variablesToFetch = null;
                 var variableRequirements = taskWorker.Type.GetCustomAttributes(typeof(ExternalTaskVariableRequirements), true)
@@ -87,7 +89,7 @@ namespace Camunda
 
                 // Now register it!
                 Console.WriteLine("Register Task Worker for Topic '" + workerTopicName + "'");
-                ExternalTaskWorker worker = new ExternalTaskWorker(ExternalTaskService(), adapter, workerTopicName, variablesToFetch);
+                ExternalTaskWorker worker = new ExternalTaskWorker(ExternalTaskService(), adapter, workerTopicName, retries, retryTimeout, variablesToFetch);
                 workers.Add(worker);
                 worker.StartWork();
             }

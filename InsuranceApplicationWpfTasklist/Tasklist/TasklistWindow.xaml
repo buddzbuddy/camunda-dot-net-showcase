@@ -10,7 +10,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition />
-            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100*"/>
@@ -33,13 +32,9 @@
         </ListView>
         <TabControl x:Name="tabControl" Grid.Column="1" Grid.Row="1">
             <TabItem x:Name="TabForm" Header="Form">
-                <Frame x:Name="taskFormFrame" Content="Frame" NavigationUIVisibility="Hidden" />
-            </TabItem>
-            <TabItem x:Name="TabDiagram" Header="Diagram">
+                <Frame x:Name="taskFormFrame" Content="" NavigationUIVisibility="Hidden" />
             </TabItem>
         </TabControl>
-       
-        <WebBrowser x:Name="DiagramBrowser" Grid.Column="1" Grid.Row="2" />
-
+      
     </Grid>
 </Window>

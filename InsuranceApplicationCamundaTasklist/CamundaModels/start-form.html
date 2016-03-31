@@ -1,24 +1,57 @@
-<strong>Here you would put the actual form to start the process</strong>
-
 <p>
-  You can use this form through Camunda Tasklist
-  by setting the formKey of a BPMN Start Event to:
-  <code>embedded:app:forms/start-form.html</code>
+    Please enter the relevant data for the new car insurance below.
 </p>
-
 <form class="form-horizontal">
-  <div class="control-group">
-    <label class="control-label">Your Name</label>
-    <div class="controls">
-      <input type="text" 
-             cam-variable-name="name"
-             cam-variable-type="String"
-             required
-             class="form-control" />
+    <div class="control-group">
+        <label class="control-label">Name</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="name"
+                   cam-variable-type="String"
+                   required
+                   class="form-control" />
+        </div>
     </div>
-  </div>
-
-  <script cam-script type="text/form-script">
-  // custom JavaScript goes here
-  </script>
+    <div class="control-group">
+        <label class="control-label">E-Mail</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="email"
+                   cam-variable-type="String"
+                   required
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Age</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="age"
+                   cam-variable-type="Integer"
+                   required
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Car Manufacturer</label>
+        <div class="controls">
+            <select cam-variable-name="carManufacturer"
+                    cam-variable-type="String">
+                <option>BMW</option>
+                <option>Porsche</option>
+                <option>VW</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Car Type</label>
+        <div class="controls">
+            <select cam-variable-name="carType"
+                    cam-variable-type="String">
+                <option>X3</option>
+                <option>911</option>
+                <option>Golf 5</option>
+            </select>
+        </div>
+    </div>
 </form>

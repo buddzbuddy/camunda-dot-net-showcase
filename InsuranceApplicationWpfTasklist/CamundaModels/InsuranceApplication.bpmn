@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="_5SVkEIXnEeSmwfgVk-ryvQ" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
   <bpmn2:collaboration id="Collaboration_1u35ano">
-    <bpmn2:participant id="Participant_0477s11" name="Insurance Application" processRef="insuranceApplication.NET" />
+    <bpmn2:participant id="Participant_0477s11" name="Insurance Application" processRef="insuranceApplication.WPF" />
   </bpmn2:collaboration>
-  <bpmn2:process id="insuranceApplication.NET" name="Insurance Application (.NET)" isExecutable="true">
+  <bpmn2:process id="insuranceApplication.WPF" name="Insurance Application (WPF)" isExecutable="true">
     <bpmn2:extensionElements>
       <camunda:properties>
         <camunda:property name="simulateNumberOfDaysInPast" value="14" />
@@ -11,7 +11,7 @@
         <camunda:property name="simulateTimeBetweenStartsBusinessDaysSd" value="6000" />
       </camunda:properties>
     </bpmn2:extensionElements>
-    <bpmn2:startEvent id="StartEvent_1" name="Application&#10;received" camunda:asyncAfter="true" camunda:formKey="InsuranceApplicationWpfTasklist.TaskForms.NewInsuranceApplication">
+    <bpmn2:startEvent id="StartEvent_1" name="Application&#10;received" camunda:formKey="InsuranceApplicationWpfTasklist.TaskForms.NewInsuranceApplication">
       <bpmn2:extensionElements>
         <camunda:properties>
           <camunda:property name="KPI-Cycle-Start" value="Decide about application" />
@@ -19,7 +19,7 @@
       </bpmn2:extensionElements>
       <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
     </bpmn2:startEvent>
-    <bpmn2:businessRuleTask id="BusinessRuleTaskAntragAutomatischPruefen" name="Check risks" camunda:resultVariable="risk" camunda:decisionRef="riskAssessment.NET" camunda:mapDecisionResult="singleResult">
+    <bpmn2:businessRuleTask id="BusinessRuleTaskAntragAutomatischPruefen" name="Check risks" camunda:resultVariable="risk" camunda:decisionRef="riskAssessment.WPF" camunda:mapDecisionResult="singleResult">
       <bpmn2:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript"><![CDATA[execution.setVariable('risk', new java.util.HashMap());]]></camunda:script>

@@ -55,12 +55,6 @@
     <EmbeddedResource Include="CamundaModels\RiskAssessment.dmn" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CamundaModels\decide.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CamundaModels\start.html" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="CamundaModels\start-form.html" />
     <EmbeddedResource Include="CamundaModels\task-form.html" />
   </ItemGroup>
