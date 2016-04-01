@@ -34,6 +34,7 @@ namespace InsuranceApplicationWpfTasklist
             var processDefinitions = Camunda.RepositoryService().LoadProcessDefinitions(true);
             processDefinitionListBox.Items.Clear();
             processDefinitionListBox.ItemsSource = processDefinitions.OrderBy(pd => pd.name).ToList(); // add them sorted by name
+            processDefinitionListBox.SelectedIndex = 0;
 
             processDefinitionListBox.DisplayMemberPath = "name";
         }
