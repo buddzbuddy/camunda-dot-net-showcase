@@ -34,11 +34,11 @@ namespace InsuranceApplicationWpfTasklist.Tasklist
             taskDetailsListView.Items.Add(new TaskProperty("Process Instance Id", task.processInstanceId));
             taskDetailsListView.Items.Add(new TaskProperty("Process Definition Id", task.processDefinitionId));
             taskDetailsListView.Items.Add(new TaskProperty("Task Assignee", task.assignee));
-            taskDetailsListView.Items.Add(new TaskProperty("Task Creation Date", task.created));
+            taskDetailsListView.Items.Add(new TaskProperty("Task Creation Date", String.Format("{0:dd/MM/yyyy HH:mm:ss}", task.created)));
             taskDetailsListView.Items.Add(new TaskProperty("Task Definition Key", task.taskDefinitionKey));
             taskDetailsListView.Items.Add(new TaskProperty("Task Description", task.description));
-            taskDetailsListView.Items.Add(new TaskProperty("Task Due Date", task.due));
-            taskDetailsListView.Items.Add(new TaskProperty("Task Follow Up Date", task.followUp));
+            taskDetailsListView.Items.Add(new TaskProperty("Task Due Date", String.Format("{0:dd/MM/yyyy HH:mm:ss}", task.due)));
+            taskDetailsListView.Items.Add(new TaskProperty("Task Follow Up Date", String.Format("{0:dd/MM/yyyy HH:mm:ss}", task.followUp)));
             taskDetailsListView.Items.Add(new TaskProperty("Task Form Key", task.formKey));
             taskDetailsListView.Items.Add(new TaskProperty("Task Id", task.id));
             taskDetailsListView.Items.Add(new TaskProperty("Task Name", task.name));

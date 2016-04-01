@@ -18,7 +18,7 @@ namespace Camunda
         }
 
 
-        public IList<ProcessDefinition> LoadProcessDefinitions(bool onlyLatest)
+        public List<ProcessDefinition> LoadProcessDefinitions(bool onlyLatest)
         {
             HttpResponseMessage response = camundaClient.HttpClient("process-definition/").GetAsync("?latestVersion=" + onlyLatest.ToString().ToLower()).Result;
             if (response.IsSuccessStatusCode)

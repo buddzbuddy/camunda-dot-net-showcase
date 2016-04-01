@@ -3,8 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using Camunda;
 using System.ComponentModel;
-using System.Reflection;
 using InsuranceApplicationWpfTasklist.Tasklist;
+using System.Linq;
 
 namespace InsuranceApplicationWpfTasklist
 {
@@ -33,16 +33,15 @@ namespace InsuranceApplicationWpfTasklist
         {
             var processDefinitions = Camunda.RepositoryService().LoadProcessDefinitions(true);
             processDefinitionListBox.Items.Clear();
-            processDefinitionListBox.ItemsSource = processDefinitions;
+            processDefinitionListBox.ItemsSource = processDefinitions.OrderBy(pd => pd.name).ToList(); // add them sorted by name
 
             processDefinitionListBox.DisplayMemberPath = "name";
-//            processDefinitionListBox.SelectedValuePath = "key";
         }
 
         public void reloadTasks()
         {
             var tasks = Camunda.HumanTaskService().LoadTasks();
-            taskListView.ItemsSource = tasks;
+            taskListView.ItemsSource = tasks.OrderByDescending(task => task.created).ToList(); // add them ordered by creation date
             /*
             Assembly thisExe = Assembly.GetEntryAssembly();
             var htmlStream = thisExe.GetManifestResourceStream("InsuranceApplicationWpfTasklist.Tasklist.diagram.html");
