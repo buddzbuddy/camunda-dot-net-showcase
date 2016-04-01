@@ -40,7 +40,8 @@ namespace Camunda
             }
             else
             {
-                return null;
+                var errorMsg = response.Content.ReadAsStringAsync();
+                throw new Exception(response.ReasonPhrase);
             }
 
         }

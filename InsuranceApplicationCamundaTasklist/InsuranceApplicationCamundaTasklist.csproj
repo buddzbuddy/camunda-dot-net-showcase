@@ -57,8 +57,8 @@
     <EmbeddedResource Include="CamundaModels\EN\InsuranceApplication.bpmn" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CamundaModels\EN\start.html" />
-    <EmbeddedResource Include="CamundaModels\EN\decide.html" />
+    <EmbeddedResource Include="CamundaModels\DE\start.html" />
+    <EmbeddedResource Include="CamundaModels\DE\decide.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CamundaClient\CamundaClient.csproj">

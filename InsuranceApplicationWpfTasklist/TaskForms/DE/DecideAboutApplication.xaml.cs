@@ -3,8 +3,9 @@ using System.Windows.Controls;
 using Camunda;
 using System.Windows;
 using Newtonsoft.Json.Linq;
+using System;
 
-namespace InsuranceApplicationWpfTasklist.TaskForms
+namespace InsuranceApplicationWpfTasklist.TaskForms.DE
 {
     /// <summary>
     /// Interaktionslogik für AntragPruefen.xaml
@@ -33,7 +34,13 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
 
         private void buttonCompleteTaskl_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Tasklist.Camunda.HumanTaskService().Complete(Task.id, NewVariables);
+            try {
+                Tasklist.Camunda.HumanTaskService().Complete(Task.id, NewVariables);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error completing the task: " + ex.Message + "\nPlease investigate and try again.", "Could not complete task", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             Tasklist.hideDetails();
             Tasklist.reloadTasks();
         }

@@ -3,7 +3,7 @@
   <bpmn2:collaboration id="Collaboration_1u35ano">
     <bpmn2:participant id="Participant_0477s11" name="Insurance Application" processRef="insuranceApplication.WPF.EN" />
   </bpmn2:collaboration>
-  <bpmn2:process id="insuranceApplication.WPF.EN" name="Insurance Application (WPF/EN)" isExecutable="true">
+  <bpmn2:process id="insuranceApplication.WPF.EN" name="Insurance Application (WPF)" isExecutable="true">
     <bpmn2:extensionElements>
       <camunda:properties>
         <camunda:property name="simulateNumberOfDaysInPast" value="14" />
@@ -11,7 +11,7 @@
         <camunda:property name="simulateTimeBetweenStartsBusinessDaysSd" value="6000" />
       </camunda:properties>
     </bpmn2:extensionElements>
-    <bpmn2:startEvent id="StartEvent_1" name="Application&#10;received" camunda:formKey="InsuranceApplicationWpfTasklist.TaskForms.NewInsuranceApplication">
+    <bpmn2:startEvent id="StartEvent_1" name="Application&#10;received" camunda:formKey="InsuranceApplicationWpfTasklist.TaskForms.EN.NewInsuranceApplication">
       <bpmn2:extensionElements>
         <camunda:properties>
           <camunda:property name="KPI-Cycle-Start" value="Decide about application" />
@@ -107,7 +107,7 @@
     <bpmn2:endEvent id="EndEventAntragBeschleunigt" name="Escalation&#10;handled">
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="userTaskAntragEntscheiden" name="Decide about application" camunda:formKey="InsuranceApplicationWpfTasklist.TaskForms.DecideAboutApplication" camunda:candidateGroups="clerk" camunda:dueDate="${dateTime().plusDays(1).toDate()}">
+    <bpmn2:userTask id="userTaskAntragEntscheiden" name="Decide about application" camunda:formKey="InsuranceApplicationWpfTasklist.TaskForms.EN.DecideAboutApplication" camunda:candidateGroups="clerk" camunda:dueDate="${dateTime().plusDays(1).toDate()}">
       <bpmn2:extensionElements>
         <camunda:properties>
           <camunda:property name="KPI-Cycle-End" value="Decide about application" />

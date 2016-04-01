@@ -3,7 +3,7 @@
   <bpmn2:collaboration id="Collaboration_1u35ano">
     <bpmn2:participant id="Participant_0477s11" name="Versicherungsneuantrag" processRef="insuranceApplication.NET.DE" />
   </bpmn2:collaboration>
-  <bpmn2:process id="insuranceApplication.NET.DE" name="Insurance Application (NET/DE)" isExecutable="true">
+  <bpmn2:process id="insuranceApplication.NET.DE" name="Versicherungsneuantrag (NET)" isExecutable="true">
     <bpmn2:extensionElements>
       <camunda:properties>
         <camunda:property name="simulateNumberOfDaysInPast" value="14" />
@@ -11,7 +11,7 @@
         <camunda:property name="simulateTimeBetweenStartsBusinessDaysSd" value="6000" />
       </camunda:properties>
     </bpmn2:extensionElements>
-    <bpmn2:startEvent id="StartEvent_1" name="Antrag&#10;erhalten" camunda:formKey="embedded:deployment:CamundaModels.EN.start.html">
+    <bpmn2:startEvent id="StartEvent_1" name="Antrag&#10;erhalten" camunda:formKey="embedded:deployment:CamundaModels.DE.start.html">
       <bpmn2:extensionElements>
         <camunda:properties>
           <camunda:property name="KPI-Cycle-Start" value="Decide about application" />
@@ -106,7 +106,7 @@
     <bpmn2:endEvent id="EndEventAntragBeschleunigt" name="Antragsprüfung&#10;beschleunigt">
       <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:userTask id="userTaskAntragEntscheiden" name="Neuantrag prüfen" camunda:formKey="embedded:deployment:CamundaModels.EN.decide.html" camunda:candidateGroups="clerk" camunda:dueDate="${dateTime().plusDays(1).toDate()}">
+    <bpmn2:userTask id="userTaskAntragEntscheiden" name="Neuantrag prüfen" camunda:formKey="embedded:deployment:CamundaModels.DE.decide.html" camunda:candidateGroups="clerk" camunda:dueDate="${dateTime().plusDays(1).toDate()}">
       <bpmn2:extensionElements>
         <camunda:properties>
           <camunda:property name="KPI-Cycle-End" value="Decide about application" />

@@ -89,23 +89,31 @@ namespace InsuranceApplicationWpfTasklist
             taskFormTabControl.Visibility = Visibility.Hidden;
         }
 
-        private void taskListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void showSelectedTask()
         {
             HumanTask task = (HumanTask)taskListView.SelectedItem;
-            if (taskListView.SelectedIndex == -1 || task == null || task.formKey==null)
+            if (taskListView.SelectedIndex == -1 || task == null || task.formKey == null)
             {
                 hideDetails();
                 return;
             }
-            try {
+            try
+            {
                 CamundaTaskForm taskFormPage = (CamundaTaskForm)Activator.CreateInstance(Type.GetType(task.formKey));
                 taskFormPage.initialize(this, task);
                 showDetails("Task Form", taskFormPage, true);
                 showDetails("Task Details", new TaskDetails(task), false);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 // Could not load form - maybe no task for .NET tasklist!
                 hideDetails();
             }
+        }
+
+        private void taskListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            showSelectedTask();
         }
 
         private void buttonStartInsuranceApplication_Click(object sender, RoutedEventArgs e)
@@ -127,6 +135,11 @@ namespace InsuranceApplicationWpfTasklist
                 // Could not load form - maybe no form key defined for .NET tasklist!
                 hideDetails();
             }
+        }
+
+        private void taskListView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            showSelectedTask();
         }
     }
 }

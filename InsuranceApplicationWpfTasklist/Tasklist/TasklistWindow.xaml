@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InsuranceApplicationWpfTasklist"
         mc:Ignorable="d"
-        Title="Camunda .NET Tasklist Demo" Width="850" Height="500" Icon="/InsuranceApplicationWpfTasklist;component/Images/favicon.ico">
+        Title="Camunda .NET Tasklist Demo" Width="1000" Height="600" Icon="/InsuranceApplicationWpfTasklist;component/Images/favicon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -14,8 +14,8 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100*"/>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="65*"/>
         </Grid.ColumnDefinitions>
         <ToolBar x:Name="toolBar" Grid.ColumnSpan="3">
             <Label>Tasklist</Label>
@@ -24,11 +24,8 @@
             </Button>
             <Separator />
             <Label>Process</Label>
-            <ComboBox  x:Name="processDefinitionListBox" >
+            <ComboBox x:Name="processDefinitionListBox" >
                 <ComboBoxItem  IsSelected="True">Insurance Application</ComboBoxItem>
-                <ComboBoxItem>12</ComboBoxItem>
-                <ComboBoxItem>14</ComboBoxItem>
-                <ComboBoxItem>16</ComboBoxItem>
             </ComboBox>
 
             <Button x:Name="buttonStart" Height="Auto" VerticalAlignment="Stretch" Width="Auto" Click="buttonStartInsuranceApplication_Click">
@@ -37,13 +34,16 @@
 
         </ToolBar>
 
-        <ListView x:Name="taskListView" Grid.Row="2" SelectionMode="Single" SelectionChanged="taskListView_SelectionChanged" Background="{x:Null}" FontSize="16">
+        <ListView x:Name="taskListView" Grid.Row="2" SelectionMode="Single" 
+                  SelectionChanged="taskListView_SelectionChanged"       
+                  MouseDoubleClick="taskListView_MouseDoubleClick"
+                  Background="{x:Null}" FontSize="16">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Prio" DisplayMemberBinding="{Binding Path=priority}" />
                     <GridViewColumn Header="Task" DisplayMemberBinding="{Binding Path=name}" />
                     <GridViewColumn Header="Assignee" DisplayMemberBinding="{Binding Path=assignee}"/>
-                    <GridViewColumn Header="Due Date" DisplayMemberBinding="{Binding Path=dueDate}"/>
+                    <GridViewColumn Header="Due Date" DisplayMemberBinding="{Binding Path=due}"/>
                 </GridView>
             </ListView.View>
         </ListView>

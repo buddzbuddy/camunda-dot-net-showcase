@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:InsuranceApplicationWpfTasklist.TaskForms"
-      xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="InsuranceApplicationWpfTasklist.TaskForms.NewInsuranceApplication"
+      xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="InsuranceApplicationWpfTasklist.TaskForms.DE.NewInsuranceApplication"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="New Insurance Application">
@@ -14,43 +14,47 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="15*"/>
-            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="0"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="3" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="3" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="3" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="3" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="3" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Label Content="Name" Grid.Column="0" Grid.Row="0" />
         <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Variables[name]}" />
 
-        <Label Content="Email" Grid.Column="0" Grid.Row="1" />
-        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Variables[email]}" />
+        <Label Content="E-Mail" Grid.Column="0" Grid.Row="2" />
+        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Variables[email]}" />
 
-        <Label Content="Alter" Grid.Column="0" Grid.Row="2" />
-        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Variables[age]}" />
+        <Label Content="Alter" Grid.Column="0" Grid.Row="4" />
+        <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Variables[age]}" />
 
-        <Label Content="KFZ Hersteller" Grid.Column="0" Grid.Row="3" />
-
-        <ComboBox Grid.Column="1" Grid.Row="3" Text="{Binding Variables[carManufacturer]}" >
+        <Label Content="KFZ Hersteller" Grid.Column="0" Grid.Row="6" />
+        <ComboBox Grid.Column="1" Grid.Row="6" Text="{Binding Variables[carManufacturer]}" >
             <System:String>BMW</System:String>
             <System:String>Porsche</System:String>
             <System:String>VW</System:String>
         </ComboBox>
 
-        <Label Content="KFZ Typ" Grid.Column="0" Grid.Row="4" />
-        <ComboBox Grid.Column="1" Grid.Row="4" Text="{Binding Variables[carType]}" >
+        <Label Content="KFZ Typ" Grid.Column="0" Grid.Row="8" />
+        <ComboBox Grid.Column="1" Grid.Row="8" Text="{Binding Variables[carType]}" >
             <System:String>X3</System:String>
             <System:String>911</System:String>
             <System:String>Golf 5</System:String>
         </ComboBox>
 
-        <Button x:Name="buttonStartProcessInstance" Content="Start Application Process"
-                Grid.Column="1" Grid.Row="5" 
+        <Button x:Name="buttonStartProcessInstance" Content="Prozess starten"
+                Grid.Column="1" Grid.Row="10" 
                 Height="Auto"  HorizontalAlignment="Right" Click="buttonStartProcessInstance_Click" />
     </Grid>
 </Page>

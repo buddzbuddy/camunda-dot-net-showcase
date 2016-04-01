@@ -3,7 +3,7 @@
   <bpmn2:collaboration id="Collaboration_1u35ano">
     <bpmn2:participant id="Participant_0477s11" name="Insurance Application" processRef="insuranceApplication.NET.EN" />
   </bpmn2:collaboration>
-  <bpmn2:process id="insuranceApplication.NET.EN" name="Insurance Application (NET/EN)" isExecutable="true">
+  <bpmn2:process id="insuranceApplication.NET.EN" name="Insurance Application (NET)" isExecutable="true">
     <bpmn2:extensionElements>
       <camunda:properties>
         <camunda:property name="simulateNumberOfDaysInPast" value="14" />

@@ -2,8 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using Camunda;
+using System;
 
-namespace InsuranceApplicationWpfTasklist.TaskForms
+namespace InsuranceApplicationWpfTasklist.TaskForms.DE
 {
     /// <summary>
     /// Interaktionslogik für NewInsuranceApplication.xaml
@@ -29,9 +30,15 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
 
         private void buttonStartProcessInstance_Click(object sender, RoutedEventArgs e)
         {
-            Tasklist.Camunda.BpmnWorkflowService().StartProcessInstance(ProcessDefinition.key, Variables);
-            Tasklist.hideDetails(); 
-            Tasklist.reloadTasks();
+            try {
+                Tasklist.Camunda.BpmnWorkflowService().StartProcessInstance(ProcessDefinition.key, Variables);
+                Tasklist.hideDetails();
+                Tasklist.reloadTasks();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error starting the process instance: " + ex.Message + "\nPlease investigate and try again.", "Could not start process instance", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
     }

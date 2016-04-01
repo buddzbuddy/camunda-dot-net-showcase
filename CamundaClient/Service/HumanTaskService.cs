@@ -89,7 +89,8 @@ namespace Camunda
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
             if (!response.IsSuccessStatusCode)
             {
-                // ?!
+                var errorMsg = response.Content.ReadAsStringAsync();
+                throw new Exception(response.ReasonPhrase);
             }
 
         }
