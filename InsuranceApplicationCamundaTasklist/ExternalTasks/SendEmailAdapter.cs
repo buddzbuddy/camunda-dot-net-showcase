@@ -22,7 +22,7 @@ namespace InsuranceApplicationWpfTasklist
             client.UseDefaultCredentials = false;
             client.Host = "mail.camunda.com";
             client.Credentials = new NetworkCredential("demo@mx.camunda.com", "28484234386345");
-            if ((Boolean)externalTask.variables["email"].value)
+            if ((Boolean)externalTask.variables["approved"].value)
             {
                 mail.Subject = "Your insurance policy was issued";
                 mail.Body = "We are happy to let you know we issued your insurance with number " + (string)externalTask.variables["policyId"].value;

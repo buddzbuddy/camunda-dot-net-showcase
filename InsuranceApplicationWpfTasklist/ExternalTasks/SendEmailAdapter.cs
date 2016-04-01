@@ -7,7 +7,7 @@ using System.Net;
 namespace InsuranceApplicationWpfTasklist
 {
     [ExternalTaskTopic("sendEmail")]
-    [ExternalTaskVariableRequirements("name", "carType", "carManufacturer", "email")]
+    [ExternalTaskVariableRequirements("name", "carType", "carManufacturer", "email", "approved", "policyId")]
     class SendEmailAdapter : ExternalTaskAdapter
     {
 
@@ -22,9 +22,15 @@ namespace InsuranceApplicationWpfTasklist
             client.UseDefaultCredentials = false;
             client.Host = "mail.camunda.com";
             client.Credentials = new NetworkCredential("demo@mx.camunda.com", "28484234386345");
-            mail.Subject = "Ihre Versicherungspolice.";
-            // todo
-            mail.Body = "this is my test email body";
+            if ((Boolean)externalTask.variables["approved"].value)
+            {
+                mail.Subject = "Your insurance policy was issued";
+                mail.Body = "We are happy to let you know we issued your insurance with number " + (string)externalTask.variables["policyId"].value;
+            } else {
+                mail.Subject = "Your insurance application was rejected";
+                mail.Body = "We are sorry, but we rejected your application. Have a good day!";
+            }
+
             client.Send(mail);
         }
 

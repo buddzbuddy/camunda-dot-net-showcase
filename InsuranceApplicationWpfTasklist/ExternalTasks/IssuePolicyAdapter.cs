@@ -12,7 +12,8 @@ namespace InsuranceApplicationWpfTasklist
 
         public void Execute(ExternalTask externalTask, ref Dictionary<string, object> resultVariables)
         {
- 
+            // just create an id for demo purposes here
+            resultVariables.Add("policyId", Guid.NewGuid().ToString());
         }
 
     }
