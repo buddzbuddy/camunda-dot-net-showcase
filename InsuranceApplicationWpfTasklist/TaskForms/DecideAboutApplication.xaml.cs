@@ -34,8 +34,7 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
         private void buttonCompleteTaskl_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Tasklist.Camunda.HumanTaskService().Complete(Task.id, NewVariables);
-            Visibility = Visibility.Hidden;
-            Tasklist.hideDetails();//.Visibility = Visibility.Visible;
+            Tasklist.hideDetails();
             Tasklist.reloadTasks();
         }
     }

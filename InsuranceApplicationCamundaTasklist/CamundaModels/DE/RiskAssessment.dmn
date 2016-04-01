@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn11.xsd" id="definitions" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">
-  <decision id="riskAssessment.WPF" name="Risk Assessment (WPF)">
+  <decision id="riskAssessment.NET.DE" name="Risk Assessment (NET/DE)">
     <decisionTable id="decisionTable" hitPolicy="FIRST">
       <input id="input1" label="Alter">
         <inputExpression id="inputExpression1" typeRef="integer">        <text>age</text>
@@ -17,16 +17,16 @@
       <output id="output1" label="Risikobeschreibung" name="description" typeRef="string" />
       <output id="OutputClause_0hh62nv" label="Risikobewertung" name="assessment" typeRef="string" />
       <rule id="row-314105272-2">
-        <description><![CDATA[No sorry - that's too risky!]]></description>
+        <description>Viel zu riskant!</description>
         <inputEntry id="UnaryTests_0lcjg79">        <text><![CDATA[<= 25]]></text>
 </inputEntry>
         <inputEntry id="UnaryTests_1xz8f1w">        <text><![CDATA["Porsche"]]></text>
 </inputEntry>
         <inputEntry id="UnaryTests_117a7p9">        <text></text>
 </inputEntry>
-        <outputEntry id="LiteralExpression_0dji0lf">        <text><![CDATA["Young and too fast"]]></text>
+        <outputEntry id="LiteralExpression_0dji0lf">        <text><![CDATA["Jung und viel zu schnell"]]></text>
 </outputEntry>
-        <outputEntry id="LiteralExpression_1j2qlq2">        <text><![CDATA["red"]]></text>
+        <outputEntry id="LiteralExpression_1j2qlq2">        <text><![CDATA["rot"]]></text>
 </outputEntry>
       </rule>
       <rule id="row-314105272-1">
@@ -36,9 +36,9 @@
 </inputEntry>
         <inputEntry id="UnaryTests_1c2g397">        <text></text>
 </inputEntry>
-        <outputEntry id="LiteralExpression_1mx9cij">        <text><![CDATA["Beginner"]]></text>
+        <outputEntry id="LiteralExpression_1mx9cij">        <text><![CDATA["Anfänger"]]></text>
 </outputEntry>
-        <outputEntry id="LiteralExpression_0zb455z">        <text><![CDATA["yellow"]]></text>
+        <outputEntry id="LiteralExpression_0zb455z">        <text><![CDATA["gelb"]]></text>
 </outputEntry>
       </rule>
       <rule id="row-314105272-3">
@@ -48,9 +48,9 @@
 </inputEntry>
         <inputEntry id="UnaryTests_185ud6j">        <text></text>
 </inputEntry>
-        <outputEntry id="LiteralExpression_1610chu">        <text><![CDATA["Young and fast"]]></text>
+        <outputEntry id="LiteralExpression_1610chu">        <text><![CDATA["Jung und schnell"]]></text>
 </outputEntry>
-        <outputEntry id="LiteralExpression_0neqx51">        <text><![CDATA["yellow"]]></text>
+        <outputEntry id="LiteralExpression_0neqx51">        <text><![CDATA["gelb"]]></text>
 </outputEntry>
       </rule>
       <rule id="row-314105272-4">
@@ -60,9 +60,9 @@
 </inputEntry>
         <inputEntry id="UnaryTests_1fsma9e">        <text><![CDATA["911"]]></text>
 </inputEntry>
-        <outputEntry id="LiteralExpression_0wves9k">        <text><![CDATA["Fast and furious"]]></text>
+        <outputEntry id="LiteralExpression_0wves9k">        <text><![CDATA["Sinnlose Raserei"]]></text>
 </outputEntry>
-        <outputEntry id="LiteralExpression_0cayvqc">        <text><![CDATA["yellow"]]></text>
+        <outputEntry id="LiteralExpression_0cayvqc">        <text><![CDATA["gelb"]]></text>
 </outputEntry>
       </rule>
       <rule id="row-314105272-5">
@@ -72,9 +72,9 @@
 </inputEntry>
         <inputEntry id="UnaryTests_1rmi011">        <text><![CDATA["X3"]]></text>
 </inputEntry>
-        <outputEntry id="LiteralExpression_1h3sboh">        <text><![CDATA["High value vehicle"]]></text>
+        <outputEntry id="LiteralExpression_1h3sboh">        <text><![CDATA["Hochwertfahrzeug"]]></text>
 </outputEntry>
-        <outputEntry id="LiteralExpression_0asc7l5">        <text><![CDATA["yellow"]]></text>
+        <outputEntry id="LiteralExpression_0asc7l5">        <text><![CDATA["gelb"]]></text>
 </outputEntry>
       </rule>
     </decisionTable>

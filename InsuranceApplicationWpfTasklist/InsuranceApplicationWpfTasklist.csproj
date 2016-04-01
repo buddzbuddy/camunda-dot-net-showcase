@@ -138,14 +138,16 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="CamundaModels\InsuranceApplication.bpmn" />
+    <EmbeddedResource Include="CamundaModels\EN\InsuranceApplication.bpmn" />
+    <EmbeddedResource Include="CamundaModels\DE\InsuranceApplication.bpmn" />
+    <EmbeddedResource Include="CamundaModels\EN\RiskAssessment.dmn" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <EmbeddedResource Include="CamundaModels\RiskAssessment.dmn" />
+    <EmbeddedResource Include="CamundaModels\DE\RiskAssessment.dmn" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -176,6 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\reload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\favicon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InsuranceApplicationWpfTasklist"
         mc:Ignorable="d"
-        Title="Camunda Tasklist" Width="850" Height="500">
+        Title="Camunda .NET Tasklist Demo" Width="850" Height="500" Icon="/InsuranceApplicationWpfTasklist;component/Images/favicon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -24,7 +24,7 @@
             </Button>
             <Separator />
             <Label>Process</Label>
-            <ComboBox  x:Name="processDefinitionList" >
+            <ComboBox  x:Name="processDefinitionListBox" >
                 <ComboBoxItem  IsSelected="True">Insurance Application</ComboBoxItem>
                 <ComboBoxItem>12</ComboBoxItem>
                 <ComboBoxItem>14</ComboBoxItem>

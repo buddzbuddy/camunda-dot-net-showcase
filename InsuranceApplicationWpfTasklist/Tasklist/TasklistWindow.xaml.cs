@@ -22,8 +22,21 @@ namespace InsuranceApplicationWpfTasklist
             DataContext = this;
             Camunda = new CamundaClient();
             Camunda.Startup();
+
             reloadTasks();
+            loadProcessDefinitions();
+
             Closing += OnWindowClosing;
+        }
+
+        private void loadProcessDefinitions()
+        {
+            var processDefinitions = Camunda.RepositoryService().LoadProcessDefinitions(true);
+            processDefinitionListBox.Items.Clear();
+            processDefinitionListBox.ItemsSource = processDefinitions;
+
+            processDefinitionListBox.DisplayMemberPath = "name";
+//            processDefinitionListBox.SelectedValuePath = "key";
         }
 
         public void reloadTasks()
@@ -79,9 +92,9 @@ namespace InsuranceApplicationWpfTasklist
         private void taskListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             HumanTask task = (HumanTask)taskListView.SelectedItem;
-            if (task == null)
+            if (taskListView.SelectedIndex == -1 || task == null || task.formKey==null)
             {
-                taskFormFrame.Content = null;
+                hideDetails();
                 return;
             }
             try {
@@ -97,14 +110,23 @@ namespace InsuranceApplicationWpfTasklist
 
         private void buttonStartInsuranceApplication_Click(object sender, RoutedEventArgs e)
         {
-            // TODO Load from process definition
-            ProcessDefinition processDefinition = new ProcessDefinition();
-            processDefinition.key = "insuranceApplication.WPF";
-            processDefinition.startFormKey = "InsuranceApplicationWpfTasklist.TaskForms.NewInsuranceApplication";
-
-            CamundaStartForm startFormPage = (CamundaStartForm)Activator.CreateInstance(Type.GetType(processDefinition.startFormKey));
-            startFormPage.initialize(this, processDefinition);
-            showDetails("Start New Process Instance Form", startFormPage, true);
+            ProcessDefinition processDefinition = (ProcessDefinition)processDefinitionListBox.SelectedValue;
+            if (processDefinitionListBox.SelectedIndex == -1 || processDefinition == null || processDefinition.startFormKey == null)
+            {
+                hideDetails();
+                return;
+            }
+            try
+            {
+                CamundaStartForm startFormPage = (CamundaStartForm)Activator.CreateInstance(Type.GetType(processDefinition.startFormKey));
+                startFormPage.initialize(this, processDefinition);
+                showDetails("Start New '" + processDefinition.name + "'", startFormPage, true);
+            }
+            catch (Exception ex)
+            {
+                // Could not load form - maybe no form key defined for .NET tasklist!
+                hideDetails();
+            }
         }
     }
 }

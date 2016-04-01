@@ -30,8 +30,7 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
         private void buttonStartProcessInstance_Click(object sender, RoutedEventArgs e)
         {
             Tasklist.Camunda.BpmnWorkflowService().StartProcessInstance(ProcessDefinition.key, Variables);
-            Visibility = Visibility.Hidden;
-            Tasklist.hideDetails(); //taskFormTab.Visibility = Visibility.Visible;
+            Tasklist.hideDetails(); 
             Tasklist.reloadTasks();
         }
 

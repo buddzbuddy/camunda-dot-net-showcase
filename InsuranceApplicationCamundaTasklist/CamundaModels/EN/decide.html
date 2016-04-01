@@ -1,19 +1,19 @@
 <p>
-    Please decide about the following application for car insurance. HALLO!
+    Please decide about the following application for car insurance.
 </p>
 <form class="form-horizontal">
     <script cam-script type="text/form-script">
-        console.log( "Hallo" );
-        camForm.on('form-loaded', function() {
-          console.log( "form loaded" );
-          // tell the form SDK to fetch the variable named 'customer'
-          camForm.variableManager.fetchVariable('risk');
-        });
+    inject([ '$scope', '$http', 'Uri', function($scope, $http, Uri) {
         camForm.on('variables-fetched', function() {
-          // work with the variable (bind it to the current AngularJS $scope)
-          $scope.risk = camForm.variableManager.variableValue('risk');
-          console.log( $scope.risk );
+            // load deserialized value of risk HashMap to be able to process it in JavaScript
+            $http({
+                    method: 'GET',
+                    url: Uri.appUri('engine://engine/:engine/task/' + camForm.taskId + '/variables/' + 'risk' + '?deserializeValue=true')
+            }).success(function(riskVariable ) {
+                $scope.risk = riskVariable.value;
+            });
         });
+    }]);
     </script>
     <div class="control-group">
         <label class="control-label">Name</label>

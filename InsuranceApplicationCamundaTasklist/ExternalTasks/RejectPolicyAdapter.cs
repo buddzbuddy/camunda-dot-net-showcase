@@ -11,6 +11,7 @@ namespace InsuranceApplicationWpfTasklist
 
         public void Execute(ExternalTask externalTask, ref Dictionary<string, object> resultVariables)
         {
+            // do nothing here in the demo
         }
 
     }

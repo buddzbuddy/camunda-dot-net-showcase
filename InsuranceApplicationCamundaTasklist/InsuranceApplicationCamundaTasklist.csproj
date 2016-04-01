@@ -51,12 +51,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EmbeddedResource Include="CamundaModels\InsuranceApplication.bpmn" />
-    <EmbeddedResource Include="CamundaModels\RiskAssessment.dmn" />
+    <EmbeddedResource Include="CamundaModels\EN\RiskAssessment.dmn" />
+    <EmbeddedResource Include="CamundaModels\DE\InsuranceApplication.bpmn" />
+    <EmbeddedResource Include="CamundaModels\DE\RiskAssessment.dmn" />
+    <EmbeddedResource Include="CamundaModels\EN\InsuranceApplication.bpmn" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CamundaModels\start-form.html" />
-    <EmbeddedResource Include="CamundaModels\task-form.html" />
+    <EmbeddedResource Include="CamundaModels\EN\start.html" />
+    <EmbeddedResource Include="CamundaModels\EN\decide.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CamundaClient\CamundaClient.csproj">

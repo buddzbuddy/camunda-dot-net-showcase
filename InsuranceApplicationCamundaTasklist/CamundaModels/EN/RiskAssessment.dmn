@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn11.xsd" id="definitions" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">
-  <decision id="riskAssessment.NET" name="Risk Assessment (.NET)">
+  <decision id="riskAssessment.NET.EN" name="Risk Assessment (.NET)">
     <decisionTable id="decisionTable" hitPolicy="FIRST">
-      <input id="input1" label="Alter">
+      <input id="input1" label="Age">
         <inputExpression id="inputExpression1" typeRef="integer">        <text>age</text>
 </inputExpression>
       </input>
-      <input id="InputClause_0ohc5m6" label="Fahrzeughersteller">
+      <input id="InputClause_0ohc5m6" label="Car Manufacturer">
         <inputExpression id="LiteralExpression_0o7difo" typeRef="string">        <text>carManufacturer</text>
 </inputExpression>
       </input>
-      <input id="InputClause_0pg433y" label="Fehrzeugtyp">
+      <input id="InputClause_0pg433y" label="Car Type">
         <inputExpression id="LiteralExpression_1si98id" typeRef="string">        <text>carType</text>
 </inputExpression>
       </input>
-      <output id="output1" label="Risikobeschreibung" name="description" typeRef="string" />
-      <output id="OutputClause_0hh62nv" label="Risikobewertung" name="assessment" typeRef="string" />
+      <output id="output1" label="Risk Description" name="description" typeRef="string" />
+      <output id="OutputClause_0hh62nv" label="Risk Assessment" name="assessment" typeRef="string" />
       <rule id="row-314105272-2">
         <description><![CDATA[No sorry - that's too risky!]]></description>
         <inputEntry id="UnaryTests_0lcjg79">        <text><![CDATA[<= 25]]></text>

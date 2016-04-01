@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 
 namespace Camunda
@@ -14,6 +15,30 @@ namespace Camunda
         public RepositoryService(CamundaClient camundaClient)
         {
             this.camundaClient = camundaClient;
+        }
+
+
+        public IList<ProcessDefinition> LoadProcessDefinitions(bool onlyLatest)
+        {
+            HttpResponseMessage response = camundaClient.HttpClient("process-definition/").GetAsync("?latestVersion=" + onlyLatest.ToString().ToLower()).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                var result = response.Content.ReadAsAsync<IEnumerable<ProcessDefinition>>().Result;
+
+                // Could be extracted into seperate method call if you run a lot of process definitions and want to optimize performance
+                foreach (ProcessDefinition pd in result)
+                {
+                    HttpResponseMessage response2 = camundaClient.HttpClient("process-definition/" + pd.id + "/startForm").GetAsync("").Result;
+                    var startForm = response2.Content.ReadAsAsync<StartFormDto>().Result;
+                    pd.startFormKey = startForm.key;
+                }
+                return new List<ProcessDefinition>(result);
+            }
+            else
+            {
+                return new List<ProcessDefinition>();
+            }
+
         }
 
         public void AutoDeploy()
@@ -58,6 +83,11 @@ namespace Camunda
 
         }
 
+    }
+
+    public class StartFormDto
+    {
+        public string key { get; set; }
     }
 
     /*
