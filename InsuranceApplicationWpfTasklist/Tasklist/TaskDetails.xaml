@@ -9,7 +9,19 @@
       Title="TaskDetails">
 
     <Grid>
-        <ListView x:Name="taskDetailsListView" SelectionMode="Single"  >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Target="{Binding ElementName=TextArea}">
+            <Hyperlink x:Name="CockpitUrl" Click="Hyperlink_Click" RequestNavigate="NavigateToCockpit">
+                <TextBlock x:Name="CockpitUrlText"/>
+            </Hyperlink>
+        </Label>
+        <ListView x:Name="taskDetailsListView" SelectionMode="Single" Grid.Row="1" >
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Property" DisplayMemberBinding="{Binding Path=property}" Width="Auto" />

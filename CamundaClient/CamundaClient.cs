@@ -10,7 +10,8 @@ namespace Camunda
 
     public class CamundaClient
     {
-        public string DEFAULT_URL = "http://localhost:8080/engine-rest/engine/default/";
+        public static string DEFAULT_URL = "http://localhost:8080/engine-rest/engine/default/";
+        public static string COCKPIT_URL = "http://localhost:8080/camunda/app/cockpit/default/";
 
         private IList<ExternalTaskWorker> workers = new List<ExternalTaskWorker>();
         public string RestUrl { get; }
