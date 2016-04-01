@@ -11,7 +11,8 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -41,6 +42,8 @@
         <Label Content="Entscheidung" Grid.Column="0" Grid.Row="5" />
         <CheckBox Grid.Column="1" Grid.Row="5" Height="Auto" IsChecked="{Binding NewVariables[approved]}" VerticalAlignment="Center" />
 
-        <Button x:Name="buttonStartProcessInstance" Content="Complete Task"  Grid.Column="1" Grid.Row="6" Height="Auto" Click="buttonCompleteTaskl_Click" />
+        <Button x:Name="buttonStartProcessInstance" Content="Complete Task"  
+                Grid.Column="1" Grid.Row="6" 
+                Height="Auto" HorizontalAlignment="Right"  Click="buttonCompleteTaskl_Click" />
     </Grid>
 </Page>

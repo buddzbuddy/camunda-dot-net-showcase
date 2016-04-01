@@ -31,6 +31,7 @@ namespace InsuranceApplicationWpfTasklist.TaskForms
         {
             Tasklist.Camunda.BpmnWorkflowService().StartProcessInstance(ProcessDefinition.key, Variables);
             Visibility = Visibility.Hidden;
+            Tasklist.hideDetails(); //taskFormTab.Visibility = Visibility.Visible;
             Tasklist.reloadTasks();
         }
 

@@ -90,6 +90,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Tasklist\TaskDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Tasklist\TasklistWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -108,6 +112,9 @@
       <DependentUpon>DecideAboutApplication.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tasklist\CamundaTaskForm.cs" />
+    <Compile Include="Tasklist\TaskDetails.xaml.cs">
+      <DependentUpon>TaskDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tasklist\TasklistWindow.xaml.cs">
       <DependentUpon>TasklistWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -163,6 +170,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tasklist\diagram.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\start.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\reload.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

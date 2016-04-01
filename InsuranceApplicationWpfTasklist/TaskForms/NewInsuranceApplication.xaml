@@ -13,7 +13,8 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -48,6 +49,8 @@
             <System:String>Golf 5</System:String>
         </ComboBox>
 
-        <Button x:Name="buttonStartProcessInstance" Content="Create Application"  Grid.Column="1" Grid.Row="5" Height="Auto" Click="buttonStartProcessInstance_Click" />
+        <Button x:Name="buttonStartProcessInstance" Content="Start Application Process"
+                Grid.Column="1" Grid.Row="5" 
+                Height="Auto"  HorizontalAlignment="Right" Click="buttonStartProcessInstance_Click" />
     </Grid>
 </Page>

@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using Camunda;
 using System.ComponentModel;
 using System.Reflection;
+using InsuranceApplicationWpfTasklist.Tasklist;
 
 namespace InsuranceApplicationWpfTasklist
 {
@@ -46,9 +47,33 @@ namespace InsuranceApplicationWpfTasklist
             reloadTasks();
         }
 
-        private void taskListView_DoubleClick(object sender, EventArgs e)
+        public void showDetails(string name, object content, Boolean firstTab) 
         {
-            MessageBox.Show("A ListViewItem was double clicked on task: " + taskListView.SelectedItem);
+            if (firstTab)
+            {
+                taskFormTabControl.Items.Clear();
+            }
+
+            var frame = new Frame();
+            frame.Content = content;
+
+            var tab = new TabItem();
+            tab.FontSize = 16;
+            tab.Header = name;
+            tab.Content = frame;
+
+            taskFormTabControl.Items.Add(tab);
+            taskFormTabControl.Visibility = Visibility.Visible;
+            if (firstTab)
+            {
+                taskFormTabControl.SelectedIndex = 0;
+            }
+        }
+
+        public void hideDetails()
+        {
+            taskFormTabControl.Items.Clear();
+            taskFormTabControl.Visibility = Visibility.Hidden;
         }
 
         private void taskListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -62,11 +87,11 @@ namespace InsuranceApplicationWpfTasklist
             try {
                 CamundaTaskForm taskFormPage = (CamundaTaskForm)Activator.CreateInstance(Type.GetType(task.formKey));
                 taskFormPage.initialize(this, task);
-                taskFormFrame.Content = taskFormPage;
+                showDetails("Task Form", taskFormPage, true);
+                showDetails("Task Details", new TaskDetails(task), false);
             } catch (Exception ex) {
                 // Could not load form - maybe no task for .NET tasklist!
-                // TODO: Do something?
-                taskFormFrame.Content = null;
+                hideDetails();
             }
         }
 
@@ -79,8 +104,7 @@ namespace InsuranceApplicationWpfTasklist
 
             CamundaStartForm startFormPage = (CamundaStartForm)Activator.CreateInstance(Type.GetType(processDefinition.startFormKey));
             startFormPage.initialize(this, processDefinition);
-            taskFormFrame.Content = startFormPage;
-
+            showDetails("Start New Process Instance Form", startFormPage, true);
         }
     }
 }

@@ -5,22 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InsuranceApplicationWpfTasklist"
         mc:Ignorable="d"
-        Title="Camunda Tasklist">
+        Title="Camunda Tasklist" Width="850" Height="500">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="0"/>
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100*"/>
+            <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="100*"/>
         </Grid.ColumnDefinitions>
-        <ToolBar x:Name="toolBar">
-            <Button x:Name="buttonReload" Content="Reload Tasks" Height="Auto" VerticalAlignment="Top" Width="Auto" Click="buttonReload_Click"/>
-            <Button x:Name="buttonStartInsuranceApplication" Content="Start New Insurance Application" Height="Auto" VerticalAlignment="Stretch" Width="Auto" Click="buttonStartInsuranceApplication_Click"/>
+        <ToolBar x:Name="toolBar" Grid.ColumnSpan="3">
+            <Label>Tasklist</Label>
+            <Button x:Name="buttonReload" Height="Auto" VerticalAlignment="Top" Width="Auto" Click="buttonReload_Click" ToolTip="Reload Tasklist">
+                <Image Source="/InsuranceApplicationWpfTasklist;component/Images/reload.png" />
+            </Button>
+            <Separator />
+            <Label>Process</Label>
+            <ComboBox  x:Name="processDefinitionList" >
+                <ComboBoxItem  IsSelected="True">Insurance Application</ComboBoxItem>
+                <ComboBoxItem>12</ComboBoxItem>
+                <ComboBoxItem>14</ComboBoxItem>
+                <ComboBoxItem>16</ComboBoxItem>
+            </ComboBox>
+
+            <Button x:Name="buttonStart" Height="Auto" VerticalAlignment="Stretch" Width="Auto" Click="buttonStartInsuranceApplication_Click">
+                <Image Source="/InsuranceApplicationWpfTasklist;component/Images/start.png" />
+            </Button>
+
         </ToolBar>
-        <Label x:Name="label1" Content="" Grid.Column="1"/>
-        <ListView x:Name="taskListView" Grid.Row="1" MouseDoubleClick="taskListView_DoubleClick" SelectionMode="Single" SelectionChanged="taskListView_SelectionChanged">
+
+        <ListView x:Name="taskListView" Grid.Row="2" SelectionMode="Single" SelectionChanged="taskListView_SelectionChanged" Background="{x:Null}" FontSize="16">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Prio" DisplayMemberBinding="{Binding Path=priority}" />
@@ -30,8 +47,8 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <TabControl x:Name="tabControl" Grid.Column="1" Grid.Row="1">
-            <TabItem x:Name="TabForm" Header="Form">
+        <TabControl x:Name="taskFormTabControl" Grid.Column="2" Grid.Row="2" Visibility="Hidden">
+            <TabItem x:Name="TabForm" Header="Form" FontSize="16" >
                 <Frame x:Name="taskFormFrame" Content="" NavigationUIVisibility="Hidden" />
             </TabItem>
         </TabControl>
