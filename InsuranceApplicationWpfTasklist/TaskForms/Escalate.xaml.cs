@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
-using Camunda;
-using System;
+using CamundaClient.Dto;
 
 namespace InsuranceApplicationWpfTasklist.TaskForms
 {

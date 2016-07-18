@@ -24,6 +24,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +34,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -52,18 +57,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CamundaClientHelper.cs" />
+    <Compile Include="EngineException.cs" />
     <Compile Include="DTO\Variable.cs" />
     <Compile Include="DTO\ProcessInstance.cs" />
     <Compile Include="DTO\ProcessDefinition.cs" />
-    <Compile Include="ExternalTaskWorker\ExternalTaskVariableRequirements.cs" />
-    <Compile Include="ExternalTaskWorker\ExternalTaskWorker.cs" />
-    <Compile Include="ExternalTaskWorker\ExternalTaskTopic.cs" />
+    <Compile Include="Worker\ExternalTaskVariableRequirements.cs" />
+    <Compile Include="Worker\ExternalTaskWorker.cs" />
+    <Compile Include="Worker\ExternalTaskTopic.cs" />
     <Compile Include="Service\ExternalTaskService.cs" />
     <Compile Include="DTO\ExternalTask.cs" />
     <Compile Include="Service\BpmnWorkflowService.cs" />
     <Compile Include="Service\RepositoryService.cs" />
     <Compile Include="CamundaClient.cs" />
-    <Compile Include="ExternalTaskWorker\ExternalTaskAdapter.cs" />
+    <Compile Include="Worker\ExternalTaskAdapter.cs" />
     <Compile Include="Service\HumanTaskService.cs" />
     <Compile Include="DTO\HumanTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

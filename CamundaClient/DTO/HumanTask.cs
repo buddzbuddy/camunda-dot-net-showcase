@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Camunda
+namespace CamundaClient.Dto
 {
     public class HumanTask
     {

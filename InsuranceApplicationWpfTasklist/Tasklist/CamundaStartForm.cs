@@ -1,6 +1,4 @@
-﻿using Camunda;
-using System.Collections.Generic;
-using System.Windows.Controls;
+﻿using CamundaClient.Dto;
 
 namespace InsuranceApplicationWpfTasklist
 {

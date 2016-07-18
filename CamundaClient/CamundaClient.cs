@@ -1,52 +1,55 @@
-﻿using System;
+﻿using CamundaClient.Service;
+using CamundaClient.Worker;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
-namespace Camunda
+namespace CamundaClient
 {
 
-    public class CamundaClient
+    public class CamundaEngineClient
     {
         public static string DEFAULT_URL = "http://localhost:8080/engine-rest/engine/default/";
         public static string COCKPIT_URL = "http://localhost:8080/camunda/app/cockpit/default/";
 
         private IList<ExternalTaskWorker> workers = new List<ExternalTaskWorker>();
-        public string RestUrl { get; }
-        public string RestUsername { get; }
-        public string RestPassword { get; }
+        private string RestUrl;
+        private string RestUsername;
+        private string RestPassword;
+        private CamundaClientHelper helper;
 
-        public CamundaClient()
+        public CamundaEngineClient()
         {
             this.RestUrl = DEFAULT_URL;
+            helper = new CamundaClientHelper(this.RestUrl, this.RestUsername, this.RestPassword);
         }
-        public CamundaClient(string restUrl, string username, string password)
+
+        public CamundaEngineClient(string restUrl, string userName, string password)
         {
             this.RestUrl = restUrl;
-            this.RestUsername = username;
+            this.RestUsername = userName;
             this.RestPassword = password;
+            helper = new CamundaClientHelper(this.RestUrl, this.RestUsername, this.RestPassword);
         }
 
         public BpmnWorkflowService BpmnWorkflowService()
         {
-            return new BpmnWorkflowService(this);
+            return new BpmnWorkflowService(helper);
         }
 
         public HumanTaskService HumanTaskService()
         {
-            return new HumanTaskService(this);
+            return new HumanTaskService(helper);
         }
 
         public RepositoryService RepositoryService()
         {
-            return new RepositoryService(this);
+            return new RepositoryService(helper);
         }
 
         public ExternalTaskService ExternalTaskService()
         {
-            return new ExternalTaskService(this);
+            return new ExternalTaskService(helper);
         }
 
         public void Startup()
@@ -86,7 +89,7 @@ namespace Camunda
                 }
 
                 var constructor = taskWorker.Type.GetConstructor(Type.EmptyTypes);
-                ExternalTaskAdapter adapter = (ExternalTaskAdapter)constructor.Invoke(null);
+                IExternalTaskAdapter adapter = (IExternalTaskAdapter)constructor.Invoke(null);
 
                 // Now register it!
                 Console.WriteLine("Register Task Worker for Topic '" + workerTopicName + "'");
@@ -106,38 +109,5 @@ namespace Camunda
 
         // HELPER METHODS
 
-        public HttpClient HttpClient(string path)
-        {
-            HttpClient client = null;
-            if (RestUsername != null)
-            {
-                var credentials = new NetworkCredential(RestUsername, RestPassword);
-                client = new HttpClient(new HttpClientHandler() { Credentials = credentials });
-            }
-            else
-            {
-                client = new HttpClient();
-            }
-            client.BaseAddress = new Uri(RestUrl + path);
-
-            // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(
-                 new MediaTypeWithQualityHeaderValue("application/json"));
-
-            return client;
-        }
-
-        public Dictionary<string, Variable> convertVariables(Dictionary<string, object> variables)
-        {
-            // report successfull execution
-            Dictionary<string, Variable> result = new Dictionary<string, Variable>();
-            foreach (var variable in variables)
-            {
-                Variable camundaVariable = new Variable();
-                camundaVariable.value = variable.Value;
-                result.Add(variable.Key, camundaVariable);
-            }
-            return result;
-        }
     }
 }

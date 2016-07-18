@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Camunda;
+using CamundaClient.Dto;
+using CamundaClient.Worker;
 using System.Net.Mail;
 using System.Net;
 
@@ -8,7 +9,7 @@ namespace InsuranceApplicationWpfTasklist
 {
     [ExternalTaskTopic("sendEmail")]
     [ExternalTaskVariableRequirements("name", "carType", "carManufacturer", "email", "approved", "policyId")]
-    class SendEmailAdapter : ExternalTaskAdapter
+    class SendEmailAdapter : IExternalTaskAdapter
     {
 
         public void Execute(ExternalTask externalTask, ref Dictionary<string, object> resultVariables)

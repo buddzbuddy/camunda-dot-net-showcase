@@ -1,4 +1,4 @@
-﻿namespace Camunda
+﻿namespace CamundaClient.Worker
 {
     [System.AttributeUsage(System.AttributeTargets.Class |
                            System.AttributeTargets.Struct)

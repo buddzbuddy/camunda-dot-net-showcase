@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Camunda;
+using CamundaClient.Dto;
+using CamundaClient.Worker;
 
 namespace SimpleCalculationProcess
 {
     [ExternalTaskTopic("calculate")]
     [ExternalTaskVariableRequirements("x", "y")]
-    class CalculationAdapter : ExternalTaskAdapter
+    class CalculationAdapter : IExternalTaskAdapter
     {
 
         public void Execute(ExternalTask externalTask, ref Dictionary<string, object> resultVariables)

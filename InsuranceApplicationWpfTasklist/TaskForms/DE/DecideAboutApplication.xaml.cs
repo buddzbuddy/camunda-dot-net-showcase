@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
-using Camunda;
+using CamundaClient.Dto;
 using System.Windows;
-using Newtonsoft.Json.Linq;
 using System;
 
 namespace InsuranceApplicationWpfTasklist.TaskForms.DE

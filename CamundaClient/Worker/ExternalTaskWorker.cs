@@ -1,16 +1,18 @@
-﻿using System;
+﻿using CamundaClient.Dto;
+using CamundaClient.Service;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Camunda
+namespace CamundaClient.Worker
 {
-    class ExternalTaskWorker
+    class ExternalTaskWorker : IDisposable
     {
         private String workerId = Guid.NewGuid().ToString(); // TODO: Make configurable
         private String topicName;
         private String[] variablesToFetch;
-        private ExternalTaskAdapter adapter;
+        private IExternalTaskAdapter adapter;
         private ExternalTaskService service;
 
         private Timer taskQueryTimer;
@@ -18,12 +20,10 @@ namespace Camunda
         private int maxDegreeOfParallelism = 2;
         private int maxTasksToFetchAtOnce = 10;
         private long lockDurationInMilliseconds = 1 * 60 * 1000; // 1 minute
-        private ExternalTaskService externalTaskService;
-        private string workerTopicName;
         private int retries;
         private long retryTimeout;
 
-        public ExternalTaskWorker(ExternalTaskService service, ExternalTaskAdapter adapter, String topicName, int retries, long retryTimeout, String[] variablesToFetch)
+        public ExternalTaskWorker(ExternalTaskService service, IExternalTaskAdapter adapter, String topicName, int retries, long retryTimeout, String[] variablesToFetch)
         {
             this.adapter = adapter;
             this.topicName = topicName;
@@ -80,6 +80,14 @@ namespace Camunda
         public void StopWork()
         {
             this.taskQueryTimer.Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (this.taskQueryTimer !=null)
+            {
+                this.taskQueryTimer.Dispose();
+            }
         }
     }
 }

@@ -1,39 +1,37 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CamundaClient.Dto;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Camunda
+namespace CamundaClient.Service
 {
 
     public class HumanTaskService
     {
-        private CamundaClient client;
+        private CamundaClientHelper helper;
 
-        public HumanTaskService(CamundaClient client)
+        public HumanTaskService(CamundaClientHelper client)
         {
-            this.client = client;
+            this.helper = client;
         }
 
         public IList<HumanTask> LoadTasks()
         {
-            HttpClient http = client.HttpClient("task/");
+            HttpClient http = helper.HttpClient("task/");
 
             HttpResponseMessage response = http.GetAsync("").Result;
             if (response.IsSuccessStatusCode)
             {
                 // Successful - parse the response body
                 var tasks = response.Content.ReadAsAsync<IEnumerable<HumanTask>>().Result;
+                http.Dispose();
                 return new List<HumanTask>(tasks);
             }
             else
             {
                 //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+                http.Dispose();
                 return new List<HumanTask>();
             }
 
@@ -41,7 +39,7 @@ namespace Camunda
 
         public Dictionary<string, object> LoadVariables(string taskId)
         {
-            HttpClient http = client.HttpClient("task/" + taskId + "/variables");
+            HttpClient http = helper.HttpClient("task/" + taskId + "/variables");
 
             HttpResponseMessage response = http.GetAsync("").Result;
             if (response.IsSuccessStatusCode)
@@ -65,10 +63,12 @@ namespace Camunda
                         variables.Add(variable.Key, variable.Value.value);
                     }
                 }
+                http.Dispose();
                 return variables;
             }
             else
             {
+                http.Dispose();
                 return new Dictionary<string, object>();
             }
         }
@@ -81,18 +81,19 @@ namespace Camunda
 
         public void Complete(String taskId, Dictionary<string, object> variables)
         {
-            HttpClient http = client.HttpClient("task/" + taskId + "/complete");
+            HttpClient http = helper.HttpClient("task/" + taskId + "/complete");
 
             CompleteTaskRequest request = new CompleteTaskRequest();
-            request.variables = client.convertVariables(variables);
+            request.variables = helper.convertVariables(variables);
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
             if (!response.IsSuccessStatusCode)
             {
                 var errorMsg = response.Content.ReadAsStringAsync();
-                throw new Exception(response.ReasonPhrase);
+                http.Dispose();
+                throw new EngineException(response.ReasonPhrase);
             }
-
+            http.Dispose();
         }
     }
 

@@ -1,41 +1,48 @@
-﻿using System;
+﻿using CamundaClient.Dto;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 
-namespace Camunda
+namespace CamundaClient.Service
 {
 
     public class RepositoryService
     {
-        private CamundaClient camundaClient;
+        private CamundaClientHelper helper;
 
-        public RepositoryService(CamundaClient camundaClient)
+        public RepositoryService(CamundaClientHelper helper)
         {
-            this.camundaClient = camundaClient;
+            this.helper = helper;
         }
 
 
         public List<ProcessDefinition> LoadProcessDefinitions(bool onlyLatest)
         {
-            HttpResponseMessage response = camundaClient.HttpClient("process-definition/").GetAsync("?latestVersion=" + onlyLatest.ToString().ToLower()).Result;
+            var http = helper.HttpClient("process-definition/");
+            HttpResponseMessage response = http.GetAsync("?latestVersion=" + (onlyLatest ? "true" : "false")).Result;
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsAsync<IEnumerable<ProcessDefinition>>().Result;
+                http.Dispose();
 
                 // Could be extracted into seperate method call if you run a lot of process definitions and want to optimize performance
                 foreach (ProcessDefinition pd in result)
                 {
-                    HttpResponseMessage response2 = camundaClient.HttpClient("process-definition/" + pd.id + "/startForm").GetAsync("").Result;
+                    http = helper.HttpClient("process-definition/" + pd.id + "/startForm");
+                    HttpResponseMessage response2 = http.GetAsync("").Result;
                     var startForm = response2.Content.ReadAsAsync<StartFormDto>().Result;
                     pd.startFormKey = startForm.key;
+                    http.Dispose();
                 }
                 return new List<ProcessDefinition>(result);
             }
             else
             {
+                http.Dispose();
                 return new List<ProcessDefinition>();
             }
 
@@ -76,8 +83,8 @@ namespace Camunda
             postParameters.Add("data", files);
 
             // Create request and receive response
-            string postURL = camundaClient.RestUrl + "deployment/create";
-            HttpWebResponse webResponse = FormUpload.MultipartFormDataPost(postURL, camundaClient.RestUsername, camundaClient.RestPassword, postParameters);
+            string postURL = helper.RestUrl + "deployment/create";
+            HttpWebResponse webResponse = FormUpload.MultipartFormDataPost(postURL, helper.RestUsername, helper.RestPassword, postParameters);
 
             Console.WriteLine("Deployment to Camunda BPM succeeded.");
 
@@ -113,7 +120,7 @@ namespace Camunda
 
             if (request == null)
             {
-                throw new NullReferenceException("request is not a http request");
+                throw new EngineException("request is not a http request");
             }
 
             // Set up the request properties.
@@ -136,6 +143,7 @@ namespace Camunda
             {
                 requestStream.Write(formData, 0, formData.Length);
                 requestStream.Close();
+                requestStream.Dispose();
             }
 
             return request.GetResponse() as HttpWebResponse;
@@ -181,6 +189,8 @@ namespace Camunda
             formDataStream.Read(formData, 0, formData.Length);
             formDataStream.Close();
 
+            formDataStream.Dispose();
+
             return formData;
         }
 
@@ -204,7 +214,7 @@ namespace Camunda
             }
             else
             {
-                string postData = string.Format("--{0}\r\nContent-Disposition: form-data; name=\"{1}\"\r\n\r\n{2}",
+                string postData = string.Format(CultureInfo.InvariantCulture, "--{0}\r\nContent-Disposition: form-data; name=\"{1}\"\r\n\r\n{2}",
                     boundary,
                     key,
                     value);
@@ -214,9 +224,9 @@ namespace Camunda
 
         public class FileParameter
         {
-            public byte[] File { get; set; }
-            public string FileName { get; set; }
-            public string ContentType { get; set; }
+            public byte[] File { get; }
+            public string FileName { get; }
+            public string ContentType { get; }
             public FileParameter(byte[] file) : this(file, null) { }
             public FileParameter(byte[] file, string filename) : this(file, filename, null) { }
             public FileParameter(byte[] file, string filename, string contenttype)

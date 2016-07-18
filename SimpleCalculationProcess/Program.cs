@@ -1,5 +1,5 @@
 ﻿using System;
-using Camunda;
+using CamundaClient;
 
 namespace SimpleCalculationProcess
 {
@@ -18,13 +18,13 @@ namespace SimpleCalculationProcess
             
             Console.WriteLine( logo + "\n\n" + "Deploying models and start External Task Workers.\n\nPRESS ANY KEY TO STOP WORKERS.\n\n");
 
-            CamundaClient camunda = new CamundaClient();            
+            CamundaEngineClient camunda = new CamundaEngineClient();            
             camunda.Startup(); // Deploys all models to Camunda and Start all found ExternalTask-Workers
             Console.ReadLine(); // wait for ANY KEY
             camunda.Shutdown(); // Stop Task Workers
         }
 
-        private static void writeTasksToConsole(CamundaClient camunda)
+        private static void writeTasksToConsole(CamundaEngineClient camunda)
         {
             var tasks = camunda.HumanTaskService().LoadTasks();
             foreach (var task in tasks)

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using Camunda;
+using CamundaClient.Dto;
+using CamundaClient.Worker;
+
 
 
 namespace InsuranceApplicationWpfTasklist
 {
     [ExternalTaskTopic("issuePolicy")]
     [ExternalTaskVariableRequirements("name", "carType", "carManufacturer", "email")]
-    class IssuePolicyAdapter : ExternalTaskAdapter
+    class IssuePolicyAdapter : IExternalTaskAdapter
     {
 
         public void Execute(ExternalTask externalTask, ref Dictionary<string, object> resultVariables)

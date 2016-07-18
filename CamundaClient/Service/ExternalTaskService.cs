@@ -1,22 +1,23 @@
-﻿using System;
+﻿using CamundaClient.Dto;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 
-namespace Camunda
+namespace CamundaClient.Service
 {
 
     public class ExternalTaskService
     {
-        private CamundaClient client;
+        private CamundaClientHelper helper;
 
-        public ExternalTaskService(CamundaClient client)
+        public ExternalTaskService(CamundaClientHelper client)
         {
-            this.client = client;
+            this.helper = client;
         }
 
         public IList<ExternalTask> FetchAndLockTasks(string workerId, int maxTasks, string topicName, long lockDurationInMilliseconds, List<string> variablesToFetch)
         {
-            HttpClient http = client.HttpClient("external-task/fetchAndLock");
+            HttpClient http = helper.HttpClient("external-task/fetchAndLock");
 
             FetchAndLockRequest request = new FetchAndLockRequest();
             request.workerId = workerId;
@@ -31,6 +32,7 @@ namespace Camunda
                 if (response.IsSuccessStatusCode)
                 {
                     var tasks = response.Content.ReadAsAsync<IEnumerable<ExternalTask>>().Result;
+                    http.Dispose();
                     return new List<ExternalTask>(tasks);
                 }
                 else
@@ -40,6 +42,7 @@ namespace Camunda
             }
             catch (Exception ex)
             {
+                http.Dispose();
                 // TODO: Handle Exception, add backoff
                 return new List<ExternalTask>();
             }
@@ -61,22 +64,23 @@ namespace Camunda
 
         internal void Complete(string workerId, string externalTaskId, Dictionary<string, object> variablesToPassToProcess)
         {
-            HttpClient http = client.HttpClient("external-task/" + externalTaskId + "/complete");
+            HttpClient http = helper.HttpClient("external-task/" + externalTaskId + "/complete");
 
             CompleteRequest request = new CompleteRequest();
             request.workerId = workerId;
-            request.variables = client.convertVariables(variablesToPassToProcess);
+            request.variables = helper.convertVariables(variablesToPassToProcess);
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+            http.Dispose();
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Could not complete external Task: " + response.ReasonPhrase);
+                throw new EngineException("Could not complete external Task: " + response.ReasonPhrase);
             }
         }
 
         internal void Failure(string workerId, string externalTaskId, string errorMessage, int retries, long retryTimeout)
         {
-            HttpClient http = client.HttpClient("external-task/" + externalTaskId + "/failure");
+            HttpClient http = helper.HttpClient("external-task/" + externalTaskId + "/failure");
 
             FailureRequest request = new FailureRequest();
             request.workerId = workerId;
@@ -85,9 +89,10 @@ namespace Camunda
             request.retryTimeout = retryTimeout;
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+            http.Dispose();
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Could not report failure for external Task: " + response.ReasonPhrase);
+                throw new EngineException("Could not report failure for external Task: " + response.ReasonPhrase);
             }
         }
 

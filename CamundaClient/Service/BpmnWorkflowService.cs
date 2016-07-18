@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections;
+﻿using CamundaClient.Dto;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Camunda
+namespace CamundaClient.Service
 {
 
     public class BpmnWorkflowService
     {
-        private CamundaClient client;
+        private CamundaClientHelper helper;
 
-        public BpmnWorkflowService(CamundaClient client)
+        public BpmnWorkflowService(CamundaClientHelper client)
         {
-            this.client = client;
+            this.helper = client;
         }
 
         private class StartProcessInstanceRequest
@@ -27,28 +23,30 @@ namespace Camunda
 
         public string StartProcessInstance(String processDefinitionKey, Dictionary<string, object> variables)
         {
-            HttpClient http = client.HttpClient("process-definition/key/" + processDefinitionKey + "/start");
+            HttpClient http = helper.HttpClient("process-definition/key/" + processDefinitionKey + "/start");
 
             StartProcessInstanceRequest request = new StartProcessInstanceRequest();
-            request.variables = client.convertVariables(variables);
+            request.variables = helper.convertVariables(variables);
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
             if (response.IsSuccessStatusCode)
             {
                 var processInstance = response.Content.ReadAsAsync<ProcessInstance>().Result;
+                http.Dispose();
                 return processInstance.id;
             }
             else
             {
                 var errorMsg = response.Content.ReadAsStringAsync();
-                throw new Exception(response.ReasonPhrase);
+                http.Dispose();
+                throw new EngineException(response.ReasonPhrase);
             }
 
         }
 
         public Dictionary<string, object> LoadVariables(string taskId)
         {
-            HttpClient http = client.HttpClient("task/" + taskId + "/variables");
+            HttpClient http = helper.HttpClient("task/" + taskId + "/variables");
 
             HttpResponseMessage response = http.GetAsync("").Result;
             if (response.IsSuccessStatusCode)
@@ -61,10 +59,12 @@ namespace Camunda
                 {
                     variables.Add(variable.Key, variable.Value.value);
                 }
+                http.Dispose();
                 return variables;
             }
             else
             {
+                http.Dispose();
                 return new Dictionary<string, object>();
             }
         }

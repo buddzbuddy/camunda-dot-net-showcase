@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Camunda;
+using CamundaClient.Dto;
+using CamundaClient.Worker;
+using CamundaClient;
 
 namespace InsuranceApplicationCamundaTasklist
 {
@@ -21,7 +23,7 @@ namespace InsuranceApplicationCamundaTasklist
 
             Console.WriteLine(logo + "\n\n" + "Deploying Models + Forms and start External Task Workers.\n\nPRESS ANY KEY TO STOP WORKERS.\n\n");
 
-            CamundaClient camunda = new CamundaClient();
+            CamundaEngineClient camunda = new CamundaEngineClient();
             camunda.Startup(); // Deploys all models to Camunda and Start all found ExternalTask-Workers
             Console.ReadLine(); // wait for ANY KEY
             camunda.Shutdown(); // Stop Task Workers

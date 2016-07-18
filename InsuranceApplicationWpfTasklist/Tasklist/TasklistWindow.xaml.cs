@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Camunda;
+using CamundaClient;
+using CamundaClient.Dto;
 using System.ComponentModel;
 using InsuranceApplicationWpfTasklist.Tasklist;
 using System.Linq;
@@ -14,13 +15,13 @@ namespace InsuranceApplicationWpfTasklist
     public partial class TasklistWindow : Window
     {
 
-        public CamundaClient Camunda { get; }
+        public CamundaEngineClient Camunda { get; }
 
         public TasklistWindow()
         {
             InitializeComponent();
             DataContext = this;
-            Camunda = new CamundaClient();
+            Camunda = new CamundaEngineClient();
             Camunda.Startup();
 
             reloadTasks();
