@@ -1,14 +1,14 @@
-# Using Camunda BPM and .NET - Showcase using C\#
+# Using Camunda BPM and .NET - Showcase using C&#35;
 
 You do not need to code Java in order to develop on Camunda BPM. This Showcase demonstrates how to use Camunda BPM in combination with the .NET-Platform. All code examples are given in C#.
 
 A class library named "Camunda Client" is contained, which can serve as a basis for your own projects using Camunda. It abstracts the details of remote communication with the Camunda BPM Platform.
 
-# A Process Application in C\#
+# A Process Application in C&#35;
 
 A process application might be a simple console application in C#. The following screenshot shows the content of the [InsuranceApplicationCamundaTasklist](InsuranceApplicationCamundaTasklist) console appplication:
 
-![Architecture](architecture.png)
+![WPF-Tasklist](wpfTasklist.png)
 
 It consists of:
 
