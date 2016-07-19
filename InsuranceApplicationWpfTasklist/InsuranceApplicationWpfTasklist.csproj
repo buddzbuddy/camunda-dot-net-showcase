@@ -116,9 +116,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ExternalTasks\SendEmailAdapter.cs" />
-    <Compile Include="ExternalTasks\RejectPolicyAdapter.cs" />
-    <Compile Include="ExternalTasks\IssuePolicyAdapter.cs" />
+    <Compile Include="Worker\SendEmailAdapter.cs" />
+    <Compile Include="Worker\RejectPolicyAdapter.cs" />
+    <Compile Include="Worker\IssuePolicyAdapter.cs" />
     <Compile Include="TaskForms\Escalate.xaml.cs">
       <DependentUpon>Escalate.xaml</DependentUpon>
     </Compile>

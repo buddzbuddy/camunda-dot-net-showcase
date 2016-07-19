@@ -69,7 +69,7 @@
     <Compile Include="DTO\ExternalTask.cs" />
     <Compile Include="Service\BpmnWorkflowService.cs" />
     <Compile Include="Service\RepositoryService.cs" />
-    <Compile Include="CamundaClient.cs" />
+    <Compile Include="CamundaEngineClient.cs" />
     <Compile Include="Worker\ExternalTaskAdapter.cs" />
     <Compile Include="Service\HumanTaskService.cs" />
     <Compile Include="DTO\HumanTask.cs" />

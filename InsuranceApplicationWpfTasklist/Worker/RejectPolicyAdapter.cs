@@ -2,7 +2,7 @@
 using CamundaClient.Dto;
 using CamundaClient.Worker;
 
-namespace InsuranceApplicationWpfTasklist
+namespace InsuranceApplicationWpfTasklist.Worker
 {
     [ExternalTaskTopic("rejectPolicy")]
     [ExternalTaskVariableRequirements("name", "carType", "carManufacturer", "email")]

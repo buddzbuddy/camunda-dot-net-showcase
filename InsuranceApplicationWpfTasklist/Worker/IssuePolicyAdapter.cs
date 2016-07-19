@@ -5,7 +5,7 @@ using CamundaClient.Worker;
 
 
 
-namespace InsuranceApplicationWpfTasklist
+namespace InsuranceApplicationWpfTasklist.Worker
 {
     [ExternalTaskTopic("issuePolicy")]
     [ExternalTaskVariableRequirements("name", "carType", "carManufacturer", "email")]
