@@ -43,9 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExternalTasks\IssuePolicyAdapter.cs" />
-    <Compile Include="ExternalTasks\RejectPolicyAdapter.cs" />
-    <Compile Include="ExternalTasks\SendEmailAdapter.cs" />
+    <Compile Include="Worker\IssuePolicyAdapter.cs" />
+    <Compile Include="Worker\RejectPolicyAdapter.cs" />
+    <Compile Include="Worker\SendEmailAdapter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

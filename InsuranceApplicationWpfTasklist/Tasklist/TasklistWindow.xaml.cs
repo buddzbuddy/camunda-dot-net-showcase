@@ -21,13 +21,21 @@ namespace InsuranceApplicationWpfTasklist
         {
             InitializeComponent();
             DataContext = this;
-            Camunda = new CamundaEngineClient();
+            Closing += OnWindowClosing;
+            this.Camunda = new CamundaEngineClient();
+
+            startup();
+        }
+
+        /**
+        * TODO: Make more robust to allow startup if Camunda is not available
+        */
+        public void startup()
+        {
             Camunda.Startup();
 
             reloadTasks();
             loadProcessDefinitions();
-
-            Closing += OnWindowClosing;
         }
 
         private void loadProcessDefinitions()

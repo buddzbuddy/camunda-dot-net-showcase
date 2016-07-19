@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="_5SVkEIXnEeSmwfgVk-ryvQ" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="camunda modeler" exporterVersion="2.7.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="_5SVkEIXnEeSmwfgVk-ryvQ" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
   <bpmn2:collaboration id="Collaboration_1u35ano">
     <bpmn2:participant id="Participant_0477s11" name="Versicherungsneuantrag" processRef="insuranceApplication.NET.DE" />
   </bpmn2:collaboration>
@@ -130,14 +130,6 @@
       <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
       <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
-    <bpmn2:serviceTask id="ServiceTask_1pdls92" name="Police zuschicken" camunda:type="external" camunda:topic="sendEmail">
-      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
-    </bpmn2:serviceTask>
-    <bpmn2:serviceTask id="ServiceTask_02gzh4m" name="Ablehnung zuschicken" camunda:type="external" camunda:topic="sendEmail">
-      <bpmn2:incoming>SequenceFlow_01vh1zw</bpmn2:incoming>
-      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
-    </bpmn2:serviceTask>
     <bpmn2:exclusiveGateway id="ExclusiveGatewayPruefung" name="Risiko?" default="SequenceFlowGreen">
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlowYellow</bpmn2:outgoing>
@@ -145,6 +137,14 @@
       <bpmn2:outgoing>SequenceFlowRed</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="StartEvent_1" targetRef="BusinessRuleTaskAntragAutomatischPruefen" />
+    <bpmn2:sendTask id="ServiceTask_1pdls92" name="Police zuschicken" camunda:type="external" camunda:topic="sendEmail">
+      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
+    </bpmn2:sendTask>
+    <bpmn2:sendTask id="ServiceTask_02gzh4m" name="Ablehnung zuschicken" camunda:type="external" camunda:topic="sendEmail">
+      <bpmn2:incoming>SequenceFlow_01vh1zw</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
+    </bpmn2:sendTask>
   </bpmn2:process>
   <bpmn2:message id="Message_1" name="MSG_UnderwriterNotwendig" />
   <bpmn2:message id="Message_2" name="MSG_GruppenleiterNotwendig" />
@@ -203,14 +203,14 @@
         <di:waypoint xsi:type="dc:Point" x="916" y="71" />
         <di:waypoint xsi:type="dc:Point" x="960" y="70" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="929" y="73" width="6" height="6" />
+          <dc:Bounds x="887.0000061963171" y="73.00027258644732" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" targetElement="_BPMNShape_EndEvent_2">
         <di:waypoint xsi:type="dc:Point" x="1060" y="70" />
         <di:waypoint xsi:type="dc:Point" x="1104" y="71" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1082" y="83" width="6" height="6" />
+          <dc:Bounds x="1039.9999932894507" y="83.00029530203298" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_BusinessRuleTask_2" targetElement="_BPMNShape_ExclusiveGateway_2">
@@ -270,7 +270,7 @@
         <di:waypoint xsi:type="dc:Point" x="1060" y="352" />
         <di:waypoint xsi:type="dc:Point" x="1104" y="352" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="977" y="353" width="6" height="6" />
+          <dc:Bounds x="935" y="353" width="90" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_0o3o39j_di" bpmnElement="ServiceTaskAblehnungVermerken">
@@ -280,7 +280,7 @@
         <di:waypoint xsi:type="dc:Point" x="916" y="352" />
         <di:waypoint xsi:type="dc:Point" x="960" y="352" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="942" y="342" width="0" height="0" />
+          <dc:Bounds x="897" y="342" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_0lcr7cx_di" bpmnElement="userTaskAntragEntscheiden">
@@ -307,12 +307,6 @@
           <dc:Bounds x="601" y="134" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ServiceTask_1pdls92_di" bpmnElement="ServiceTask_1pdls92">
-        <dc:Bounds x="960" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_02gzh4m_di" bpmnElement="ServiceTask_02gzh4m">
-        <dc:Bounds x="960" y="312" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="_BPMNShape_StartEvent_4" targetElement="_BPMNShape_BusinessRuleTask_2">
         <di:waypoint xsi:type="dc:Point" x="95" y="70" />
         <di:waypoint xsi:type="dc:Point" x="139" y="70" />
@@ -320,6 +314,12 @@
           <dc:Bounds x="95" y="70" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_1gv9cp0_di" bpmnElement="ServiceTask_1pdls92">
+        <dc:Bounds x="960" y="30" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendTask_07aynak_di" bpmnElement="ServiceTask_02gzh4m">
+        <dc:Bounds x="960" y="312" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>

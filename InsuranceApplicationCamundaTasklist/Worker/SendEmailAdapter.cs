@@ -5,7 +5,7 @@ using System.Net;
 using CamundaClient.Dto;
 using CamundaClient.Worker;
 
-namespace InsuranceApplicationWpfTasklist
+namespace InsuranceApplicationCamundaTasklist.Worker
 {
     [ExternalTaskTopic("sendEmail")]
     [ExternalTaskVariableRequirements("name", "carType", "carManufacturer", "email", "approved", "policyId")]
@@ -18,6 +18,8 @@ namespace InsuranceApplicationWpfTasklist
 
             MailMessage mail = new MailMessage("demo@camunda.com", email);
             SmtpClient client = new SmtpClient();
+
+            //...
             client.Port = 25;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
