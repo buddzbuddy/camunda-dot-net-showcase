@@ -99,7 +99,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_01vh1zw" sourceRef="ServiceTaskAblehnungVermerken" targetRef="ServiceTask_02gzh4m" />
     <bpmn2:sequenceFlow id="SequenceFlow_13" name="" sourceRef="ServiceTask_02gzh4m" targetRef="EndEventAntragAbgelehnt" />
     <bpmn2:sequenceFlow id="SequenceFlow_5" name="" sourceRef="UserTaskAntragspruefungBeschleunigen" targetRef="EndEventAntragBeschleunigt" />
-    <bpmn2:userTask id="UserTaskAntragspruefungBeschleunigen" name="Antragsprüfung beschleunigen" camunda:formKey="InsuranceApplicationWpfTasklist.TaskForms.Escalate" camunda:candidateGroups="management">
+    <bpmn2:userTask id="UserTaskAntragspruefungBeschleunigen" name="Antragsprüfung beschleunigen" camunda:candidateGroups="management">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_5</bpmn2:outgoing>
     </bpmn2:userTask>
