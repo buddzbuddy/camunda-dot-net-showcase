@@ -1,12 +1,16 @@
-# Using Camunda BPM and .NET - a running showcase using C#
+# Using Camunda BPM and .NET - Showcase using C\#
 
 You do not need to code Java in order to develop on Camunda BPM. This Showcase demonstrates how to use Camunda BPM in combination with the .NET-Platform. All code examples are given in C#.
 
-A library named "Camunda Client" is present, which can be a basis for own projects using Camunda. It abstracts the details of remote communication with the Camunda BPM Platform.
+A class library named "Camunda Client" is contained, which can serve as a basis for your own projects using Camunda. It abstracts the details of remote communication with the Camunda BPM Platform.
 
-# A Process Application in C#
+# A Process Application in C\#
 
-A process application might be a simple console application in C#. It consists of:
+A process application might be a simple console application in C#. The following screenshot shows the content of the [InsuranceApplicationCamundaTasklist](InsuranceApplicationCamundaTasklist) console appplication:
+
+![Architecture](architecture.png)
+
+It consists of:
 
 * Models (BPMN, CMMN or DMN): You can add models to your application. If you configure them to be "embedded resources" they can be scanned by the "Camunda Client", which deployes them to the Camunda Engine via REST-API.
 
@@ -58,7 +62,7 @@ camunda:formKey="embedded:deployment:CamundaModels.DE.decide.html"
 The Class Library [Camunda Client](CamundaClient) is not meant to be a re-usable, stable component. It is meant to serve as example and can be a starting point for your own code. Feel free to copy and modify the code, as it is released under Apache License you can do what you want with the code.
 
 ## Startup
-See [SimpleCalculationProcess Example}(SimpleCalculationProcess/Program.cs#L21-L24) on how-to start and stop the Camunda Client.
+See [SimpleCalculationProcess Example´](SimpleCalculationProcess/Program.cs#L21-L24) on how-to start and stop the Camunda Client.
 
 During Startup the client:
 
