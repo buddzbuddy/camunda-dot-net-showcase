@@ -8,7 +8,7 @@ A class library named "Camunda Client" is contained, which can serve as a basis 
 
 A process application might be a simple console application in C#. The following screenshot shows the content of the [InsuranceApplicationCamundaTasklist](InsuranceApplicationCamundaTasklist) console appplication:
 
-![WPF-Tasklist](wpfTasklist.png)
+![Project Layout](project.png)
 
 It consists of:
 
