@@ -54,6 +54,11 @@ namespace CamundaClient.Service
             thisExe = System.Reflection.Assembly.GetEntryAssembly();
             string[] resources = thisExe.GetManifestResourceNames();
 
+            if (resources.Length == 0)
+            {
+                return;
+            }
+
             // TODO: Verify if this is the correct way of doing it:
             String assemblyBaseName = thisExe.GetName().Name;
 
