@@ -44,6 +44,7 @@ namespace CamundaClient.Service
             {
                 http.Dispose();
                 // TODO: Handle Exception, add backoff
+                //throw new EngineException("Could not fetch and lock tasks", ex);
                 return new List<ExternalTask>();
             }
         }
@@ -62,7 +63,7 @@ namespace CamundaClient.Service
             public List<string> variables;
         }
 
-        internal void Complete(string workerId, string externalTaskId, Dictionary<string, object> variablesToPassToProcess)
+        public void Complete(string workerId, string externalTaskId, Dictionary<string, object> variablesToPassToProcess)
         {
             HttpClient http = helper.HttpClient("external-task/" + externalTaskId + "/complete");
 
@@ -78,7 +79,7 @@ namespace CamundaClient.Service
             }
         }
 
-        internal void Failure(string workerId, string externalTaskId, string errorMessage, int retries, long retryTimeout)
+        public void Failure(string workerId, string externalTaskId, string errorMessage, int retries, long retryTimeout)
         {
             HttpClient http = helper.HttpClient("external-task/" + externalTaskId + "/failure");
 

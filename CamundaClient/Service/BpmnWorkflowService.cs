@@ -18,14 +18,20 @@ namespace CamundaClient.Service
         private class StartProcessInstanceRequest
         {
             public Dictionary<string, Variable> variables;
+            public string businessKey;
         }
 
-
         public string StartProcessInstance(String processDefinitionKey, Dictionary<string, object> variables)
+        {
+            return StartProcessInstance(processDefinitionKey, null, variables);
+        }
+
+        public string StartProcessInstance(String processDefinitionKey, String businessKey, Dictionary<string, object> variables)
         {
             HttpClient http = helper.HttpClient("process-definition/key/" + processDefinitionKey + "/start");
 
             StartProcessInstanceRequest request = new StartProcessInstanceRequest();
+            request.businessKey = businessKey;
             request.variables = helper.convertVariables(variables);
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
@@ -52,6 +58,7 @@ namespace CamundaClient.Service
             if (response.IsSuccessStatusCode)
             {
                 // Successful - parse the response body
+                var t = response.Content.ReadAsAsync<Dictionary<string, Variable>>();
                 var variableResponse = response.Content.ReadAsAsync<Dictionary<string, Variable>>().Result;
 
                 Dictionary<string, object> variables = new Dictionary<string, object>();
