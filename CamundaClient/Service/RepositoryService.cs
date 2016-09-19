@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 
 namespace CamundaClient.Service
@@ -52,41 +53,23 @@ namespace CamundaClient.Service
 
         }
 
-        public void AutoDeploy()
+        public void DeleteDeployment(string deploymentId)
         {
-            System.Reflection.Assembly thisExe;
-            thisExe = System.Reflection.Assembly.GetEntryAssembly();
-            string[] resources = thisExe.GetManifestResourceNames();
-
-            if (resources.Length == 0)
+            HttpClient http = helper.HttpClient("deployment/" + deploymentId + "?cascade=true");
+            HttpResponseMessage response = http.DeleteAsync("").Result;
+            if (!response.IsSuccessStatusCode)
             {
-                return;
+                var errorMsg = response.Content.ReadAsStringAsync();
+                http.Dispose();
+                throw new EngineException(response.ReasonPhrase);
             }
+            http.Dispose();
+        }
 
-            // TODO: Verify if this is the correct way of doing it:
-            String assemblyBaseName = thisExe.GetName().Name;
-
-            List<object> files = new List<object>();
-            foreach (string resource in resources)
-            {
-                // TODO Check if Camunda relevant (BPMN, DMN, HTML Forms)
-
-                // Read and add to Form for Deployment
-                Stream resourceAsStream = thisExe.GetManifestResourceStream(resource);
-                byte[] resourceAsBytearray;
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    resourceAsStream.CopyTo(ms);
-                    resourceAsBytearray = ms.ToArray();
-                }
-
-                String fileLocalName = resource.Replace(assemblyBaseName + ".", "");
-                files.Add(new FormUpload.FileParameter(resourceAsBytearray, fileLocalName));
-
-                Console.WriteLine("Adding resource to deployment: " + resource);
-            }
+        public String Deploy(string deploymentName, List<object> files)
+        {
             Dictionary<string, object> postParameters = new Dictionary<string, object>();
-            postParameters.Add("deployment-name", assemblyBaseName);
+            postParameters.Add("deployment-name", deploymentName);
             postParameters.Add("deployment-source", "C# Process Application");
             postParameters.Add("enable-duplicate-filtering", "true");
             postParameters.Add("data", files);
@@ -95,10 +78,76 @@ namespace CamundaClient.Service
             string postURL = helper.RestUrl + "deployment/create";
             HttpWebResponse webResponse = FormUpload.MultipartFormDataPost(postURL, helper.RestUsername, helper.RestPassword, postParameters);
 
+            using (var reader = new StreamReader(webResponse.GetResponseStream(), Encoding.UTF8))
+            {
+                var deployment = JsonConvert.DeserializeObject<Deployment>(reader.ReadToEnd());
+                return deployment.id;
+            }            
+        }
+
+        public void AutoDeploy()
+        {
+            Assembly thisExe = Assembly.GetEntryAssembly();
+            string[] resources = thisExe.GetManifestResourceNames();
+
+            if (resources.Length == 0)
+            {
+                return;
+            }
+
+            List<object> files = new List<object>();
+            foreach (string resource in resources)
+            {
+                // TODO Check if Camunda relevant (BPMN, DMN, HTML Forms)
+
+                // Read and add to Form for Deployment                
+                files.Add(FileParameter.fromManifestResource(thisExe, resource));
+
+                Console.WriteLine("Adding resource to deployment: " + resource);
+            }
+
+            Deploy(thisExe.GetName().Name, files);
+
             Console.WriteLine("Deployment to Camunda BPM succeeded.");
 
         }
 
+    }
+
+    public class FileParameter
+    {
+        public byte[] File { get; }
+        public string FileName { get; }
+        public string ContentType { get; }
+        public FileParameter(byte[] file) : this(file, null) { }
+        public FileParameter(byte[] file, string filename) : this(file, filename, null) { }
+        public FileParameter(byte[] file, string filename, string contenttype)
+        {
+            File = file;
+            FileName = filename;
+            ContentType = contenttype;
+        }
+
+        static public FileParameter fromManifestResource(Assembly assembly, string resourcePath)
+        {
+            Stream resourceAsStream = assembly.GetManifestResourceStream(resourcePath);
+            byte[] resourceAsBytearray;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                resourceAsStream.CopyTo(ms);
+                resourceAsBytearray = ms.ToArray();
+            }
+
+            // TODO: Verify if this is the correct way of doing it:
+            string assemblyBaseName = assembly.GetName().Name;      
+            string fileLocalName = resourcePath.Replace(assemblyBaseName + ".", "");
+
+            return new FileParameter(resourceAsBytearray, fileLocalName);
+        }
+        static public FileParameter fromByteArray(string resourceName, byte[] resourceAsBytearray)
+        {
+            return new FileParameter(resourceAsBytearray, resourceName);
+        }
     }
 
     public class StartFormDto
@@ -230,20 +279,6 @@ namespace CamundaClient.Service
                 formDataStream.Write(encoding.GetBytes(postData), 0, encoding.GetByteCount(postData));
             }            
         }
-
-        public class FileParameter
-        {
-            public byte[] File { get; }
-            public string FileName { get; }
-            public string ContentType { get; }
-            public FileParameter(byte[] file) : this(file, null) { }
-            public FileParameter(byte[] file, string filename) : this(file, filename, null) { }
-            public FileParameter(byte[] file, string filename, string contenttype)
-            {
-                File = file;
-                FileName = filename;
-                ContentType = contenttype;
-            }
-        }
+       
     }
 }

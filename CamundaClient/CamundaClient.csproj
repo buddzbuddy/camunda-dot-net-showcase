@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CamundaClientHelper.cs" />
+    <Compile Include="DTO\Deployment.cs" />
     <Compile Include="EngineException.cs" />
     <Compile Include="DTO\Variable.cs" />
     <Compile Include="DTO\ProcessInstance.cs" />
