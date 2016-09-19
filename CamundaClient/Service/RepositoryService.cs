@@ -144,10 +144,6 @@ namespace CamundaClient.Service
 
             return new FileParameter(resourceAsBytearray, fileLocalName);
         }
-        static public FileParameter fromByteArray(string resourceName, byte[] resourceAsBytearray)
-        {
-            return new FileParameter(resourceAsBytearray, resourceName);
-        }
     }
 
     public class StartFormDto
