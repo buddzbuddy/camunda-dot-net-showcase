@@ -1,7 +1,9 @@
 ﻿using CamundaClient.Dto;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 
 namespace CamundaClient.Service
 {
@@ -28,10 +30,13 @@ namespace CamundaClient.Service
             topic.variables = variablesToFetch;
             request.topics.Add(topic);
             try {
-                HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+                var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+                HttpResponseMessage response = http.PostAsync("", requestContent).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    var tasks = response.Content.ReadAsAsync<IEnumerable<ExternalTask>>().Result;
+                    var tasks = JsonConvert.DeserializeObject<IEnumerable<ExternalTask>>(
+                        response.Content.ReadAsStringAsync().Result);
+
                     http.Dispose();
                     return new List<ExternalTask>(tasks);
                 }
@@ -44,8 +49,7 @@ namespace CamundaClient.Service
             {
                 http.Dispose();
                 // TODO: Handle Exception, add backoff
-                //throw new EngineException("Could not fetch and lock tasks", ex);
-                return new List<ExternalTask>();
+                throw new EngineException("Could not fetch and lock tasks: " + ex.GetBaseException().Message, ex);
             }
         }
 
@@ -71,7 +75,8 @@ namespace CamundaClient.Service
             request.workerId = workerId;
             request.variables = helper.convertVariables(variablesToPassToProcess);
 
-            HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            HttpResponseMessage response = http.PostAsync("", requestContent).Result;
             http.Dispose();
             if (!response.IsSuccessStatusCode)
             {
@@ -89,7 +94,8 @@ namespace CamundaClient.Service
             request.retries = retries;
             request.retryTimeout = retryTimeout;
 
-            HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            HttpResponseMessage response = http.PostAsync("", requestContent).Result;
             http.Dispose();
             if (!response.IsSuccessStatusCode)
             {

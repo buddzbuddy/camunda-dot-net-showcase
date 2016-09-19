@@ -1,7 +1,9 @@
 ﻿using CamundaClient.Dto;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 
 namespace CamundaClient.Service
 {
@@ -34,10 +36,13 @@ namespace CamundaClient.Service
             request.businessKey = businessKey;
             request.variables = helper.convertVariables(variables);
 
-            HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            HttpResponseMessage response = http.PostAsync("", requestContent).Result;
             if (response.IsSuccessStatusCode)
             {
-                var processInstance = response.Content.ReadAsAsync<ProcessInstance>().Result;
+                var processInstance = JsonConvert.DeserializeObject<ProcessInstance>(
+                    response.Content.ReadAsStringAsync().Result);
+
                 http.Dispose();
                 return processInstance.id;
             }
@@ -58,8 +63,8 @@ namespace CamundaClient.Service
             if (response.IsSuccessStatusCode)
             {
                 // Successful - parse the response body
-                var t = response.Content.ReadAsAsync<Dictionary<string, Variable>>();
-                var variableResponse = response.Content.ReadAsAsync<Dictionary<string, Variable>>().Result;
+                var variableResponse = JsonConvert.DeserializeObject< Dictionary<string, Variable>>(
+                    response.Content.ReadAsStringAsync().Result);
 
                 Dictionary<string, object> variables = new Dictionary<string, object>();
                 foreach (var variable in variableResponse)

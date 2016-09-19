@@ -1,4 +1,5 @@
 ﻿using CamundaClient.Dto;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -26,7 +27,8 @@ namespace CamundaClient.Service
             HttpResponseMessage response = http.GetAsync("?latestVersion=" + (onlyLatest ? "true" : "false")).Result;
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsAsync<IEnumerable<ProcessDefinition>>().Result;
+                var result = JsonConvert.DeserializeObject<IEnumerable<ProcessDefinition>>(
+                    response.Content.ReadAsStringAsync().Result);
                 http.Dispose();
 
                 // Could be extracted into seperate method call if you run a lot of process definitions and want to optimize performance
@@ -34,7 +36,9 @@ namespace CamundaClient.Service
                 {
                     http = helper.HttpClient("process-definition/" + pd.id + "/startForm");
                     HttpResponseMessage response2 = http.GetAsync("").Result;
-                    var startForm = response2.Content.ReadAsAsync<StartFormDto>().Result;
+                    var startForm = JsonConvert.DeserializeObject<StartFormDto>(
+                        response2.Content.ReadAsStringAsync().Result);
+
                     pd.startFormKey = startForm.key;
                     http.Dispose();
                 }

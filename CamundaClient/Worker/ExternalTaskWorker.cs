@@ -36,14 +36,21 @@ namespace CamundaClient.Worker
         public void DoPolling()
         {
             // Query External Tasks
-            IList<ExternalTask> tasks = service.FetchAndLockTasks(workerId, maxTasksToFetchAtOnce, topicName, lockDurationInMilliseconds, new List<string>(variablesToFetch));
+            try {
+                IList<ExternalTask> tasks = service.FetchAndLockTasks(workerId, maxTasksToFetchAtOnce, topicName, lockDurationInMilliseconds, new List<string>(variablesToFetch));
 
-            // run them in parallel with a max degree of parallelism
-            Parallel.ForEach(
-                tasks,
-                new ParallelOptions { MaxDegreeOfParallelism = this.maxDegreeOfParallelism },
-                externalTask => { Execute(externalTask); }
-            );
+                // run them in parallel with a max degree of parallelism
+                Parallel.ForEach(
+                    tasks,
+                    new ParallelOptions { MaxDegreeOfParallelism = this.maxDegreeOfParallelism },
+                    externalTask => { Execute(externalTask); }
+                );
+            }
+            catch (EngineException ex)
+            {
+                // Most probably server is not running or request is invalid
+                Console.WriteLine(ex.Message);
+            }
 
             // schedule next run
             taskQueryTimer.Change(pollingIntervalInMilliseconds, Timeout.Infinite);

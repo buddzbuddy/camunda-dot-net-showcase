@@ -1,8 +1,10 @@
 ﻿using CamundaClient.Dto;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 
 namespace CamundaClient.Service
 {
@@ -24,7 +26,8 @@ namespace CamundaClient.Service
             if (response.IsSuccessStatusCode)
             {
                 // Successful - parse the response body
-                var tasks = response.Content.ReadAsAsync<IEnumerable<HumanTask>>().Result;
+                var tasks = JsonConvert.DeserializeObject<IEnumerable < HumanTask >> (
+                    response.Content.ReadAsStringAsync().Result);
                 http.Dispose();
                 return new List<HumanTask>(tasks);
             }
@@ -45,9 +48,10 @@ namespace CamundaClient.Service
             if (response.IsSuccessStatusCode)
             {
                 // Successful - parse the response body
-                var variableResponse = response.Content.ReadAsAsync<Dictionary<string, Variable>>().Result;
+                var variableResponse = JsonConvert.DeserializeObject<Dictionary < string, Variable>> (
+                    response.Content.ReadAsStringAsync().Result);
 
-                Dictionary < string, object>  variables = new Dictionary<string, object>();
+                Dictionary< string, object>  variables = new Dictionary<string, object>();
                 foreach (var variable in variableResponse)
                 {
                     if (variable.Value.type=="object")
@@ -86,7 +90,8 @@ namespace CamundaClient.Service
             CompleteTaskRequest request = new CompleteTaskRequest();
             request.variables = helper.convertVariables(variables);
 
-            HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            HttpResponseMessage response = http.PostAsync("", requestContent).Result;
             if (!response.IsSuccessStatusCode)
             {
                 var errorMsg = response.Content.ReadAsStringAsync();
