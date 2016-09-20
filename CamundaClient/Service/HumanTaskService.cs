@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -20,7 +21,13 @@ namespace CamundaClient.Service
 
         public IList<HumanTask> LoadTasks()
         {
-            HttpClient http = helper.HttpClient("task/");
+            return LoadTasks(new Dictionary<string, string>());
+        }
+
+        public IList<HumanTask> LoadTasks(IDictionary<string, string> queryParameters)
+        {
+            string s = string.Join("&", queryParameters.Select(x => x.Key + "=" + x.Value));
+            HttpClient http = helper.HttpClient("task/?" + s);
 
             HttpResponseMessage response = http.GetAsync("").Result;
             if (response.IsSuccessStatusCode)

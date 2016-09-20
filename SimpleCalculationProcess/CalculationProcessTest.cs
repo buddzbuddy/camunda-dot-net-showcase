@@ -21,7 +21,7 @@ namespace SimpleCalculationProcess
             string deploymentId = camunda.RepositoryService().Deploy("testcase", new List<object> {
                 FileParameter.fromManifestResource(Assembly.GetExecutingAssembly(), "SimpleCalculationProcess.calculation.bpmn") });
 
-            camunda.BpmnWorkflowService().StartProcessInstance("calculate", new Dictionary<string, object>()
+            string processInstanceId = camunda.BpmnWorkflowService().StartProcessInstance("calculate", new Dictionary<string, object>()
             {
                 {"x", 5 },
                 {"y", 10 }
@@ -33,11 +33,13 @@ namespace SimpleCalculationProcess
 
             camunda.ExternalTaskService().Complete("testcase", externalTasks.First().id, new Dictionary<string, object>() { { "result", 15 } });
 
-            var tasks = camunda.HumanTaskService().LoadTasks();
-            //Assert.AreEqual(1, tasks.Count);
-            //Assert.AreEqual("ServiceTaskCalculate", tasks.First().activityId);
+            var tasks = camunda.HumanTaskService().LoadTasks(new Dictionary<string, string>() {
+                { "processInstanceId", processInstanceId }
+            });
+            Assert.AreEqual(1, tasks.Count);
+            Assert.AreEqual("UserTaskReviewResult", tasks.First().taskDefinitionKey);
 
-            //camunda.HumanTaskService().Complete(
+            camunda.HumanTaskService().Complete(tasks.First().id, new Dictionary<string, object>());
 
             // not the process instance has ended, TODO: Check state with History
 
