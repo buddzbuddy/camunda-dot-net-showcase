@@ -42,7 +42,7 @@ namespace CamundaClient.Service
             {
                 //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
                 http.Dispose();
-                return new List<HumanTask>();
+                throw new EngineException("Could not fetch and lock tasks: " + response.ReasonPhrase);
             }
 
         }
@@ -80,7 +80,7 @@ namespace CamundaClient.Service
             else
             {
                 http.Dispose();
-                return new Dictionary<string, object>();
+                throw new EngineException("Could not fetch and lock tasks: " + response.ReasonPhrase);
             }
         }
 

@@ -77,7 +77,7 @@ namespace CamundaClient.Service
             else
             {
                 http.Dispose();
-                return new Dictionary<string, object>();
+                throw new EngineException("Could not load variable: " + response.ReasonPhrase);
             }
         }
     }

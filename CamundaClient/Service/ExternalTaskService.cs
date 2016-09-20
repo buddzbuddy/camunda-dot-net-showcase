@@ -42,7 +42,8 @@ namespace CamundaClient.Service
                 }
                 else
                 {
-                    return new List<ExternalTask>();
+                    http.Dispose();
+                    throw new EngineException("Could not fetch and lock tasks: " + response.ReasonPhrase);
                 }
             }
             catch (Exception ex)

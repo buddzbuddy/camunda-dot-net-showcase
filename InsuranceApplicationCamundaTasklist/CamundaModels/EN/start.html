@@ -1,0 +1,57 @@
+<p>
+    Please enter relevant data to start the insurance application.
+</p>
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">Name</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="name"
+                   cam-variable-type="String"
+                   required
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Email</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="email"
+                   cam-variable-type="String"
+                   required
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Age</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="age"
+                   cam-variable-type="Integer"
+                   required
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Car manufacturer</label>
+        <div class="controls">
+            <select cam-variable-name="carManufacturer"
+                    cam-variable-type="String">
+                <option>BMW</option>
+                <option>Porsche</option>
+                <option>VW</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Car type</label>
+        <div class="controls">
+            <select cam-variable-name="carType"
+                    cam-variable-type="String">
+                <option>X3</option>
+                <option>911</option>
+                <option>Golf 5</option>
+            </select>
+        </div>
+    </div>
+</form>
