@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CamundaClient.Dto
 {
-    class FileParameter
+    public class FileParameter
     {
         public byte[] File { get; }
         public string FileName { get; }
