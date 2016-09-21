@@ -7,9 +7,11 @@ using System.Net.Http.Headers;
 
 namespace CamundaClient
 {
+
     public class CamundaClientHelper
     {
         public Uri RestUrl { get; }
+        public const string CONTENT_TYPE_JSON = "application/json";
         public string RestUsername { get; }
         public string RestPassword { get; }
 
@@ -35,7 +37,7 @@ namespace CamundaClient
             client.BaseAddress = new Uri(RestUrl + path);
 
             // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(CONTENT_TYPE_JSON));
 
             return client;
         }

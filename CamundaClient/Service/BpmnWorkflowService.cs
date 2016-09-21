@@ -1,8 +1,10 @@
 ﻿using CamundaClient.Dto;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using CamundaClient.Requests;
+using System.Text;
 
 namespace CamundaClient.Service
 {
@@ -16,17 +18,22 @@ namespace CamundaClient.Service
             this.helper = client;
         }
 
-        public string StartProcessInstance(String processDefinitionKey, Dictionary<string, object> variables)
+        public string StartProcessInstance(string processDefinitionKey, Dictionary<string, object> variables) => StartProcessInstance(processDefinitionKey, null, variables);
+
+        public string StartProcessInstance(string processDefinitionKey, string businessKey, Dictionary<string, object> variables)
         {
             HttpClient http = helper.HttpClient("process-definition/key/" + processDefinitionKey + "/start");
 
             var request = new CompleteRequest();
             request.Variables = CamundaClientHelper.ConvertVariables(variables);
+            request.BusinessKey = businessKey;
 
-            HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            HttpResponseMessage response = http.PostAsync("", requestContent).Result;
             if (response.IsSuccessStatusCode)
             {
-                var processInstance = response.Content.ReadAsAsync<ProcessInstance>().Result;
+                var processInstance = JsonConvert.DeserializeObject<ProcessInstance>(response.Content.ReadAsStringAsync().Result);
+
                 http.Dispose();
                 return processInstance.Id;
             }
@@ -47,7 +54,7 @@ namespace CamundaClient.Service
             if (response.IsSuccessStatusCode)
             {
                 // Successful - parse the response body
-                var variableResponse = response.Content.ReadAsAsync<Dictionary<string, Variable>>().Result;
+                var variableResponse = JsonConvert.DeserializeObject< Dictionary<string, Variable>>(response.Content.ReadAsStringAsync().Result);
 
                 Dictionary<string, object> variables = new Dictionary<string, object>();
                 foreach (var variable in variableResponse)
@@ -60,7 +67,7 @@ namespace CamundaClient.Service
             else
             {
                 http.Dispose();
-                return new Dictionary<string, object>();
+                throw new EngineException("Could not load variable: " + response.ReasonPhrase);
             }
         }
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="_5SVkEIXnEeSmwfgVk-ryvQ" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="Camunda Modeler" exporterVersion="1.2.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="_5SVkEIXnEeSmwfgVk-ryvQ" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="Camunda Modeler" exporterVersion="1.3.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
   <bpmn2:collaboration id="Collaboration_1u35ano">
     <bpmn2:participant id="Participant_0477s11" name="Versicherungsneuantrag" processRef="insuranceApplication.NET.DE" />
   </bpmn2:collaboration>
@@ -81,8 +81,8 @@
       </bpmn2:extensionElements>
       <bpmn2:incoming>SequenceFlow_11</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ServiceTaskPoliceAusstellen" targetRef="ServiceTask_1pdls92" />
-    <bpmn2:sequenceFlow id="SequenceFlow_11" name="" sourceRef="ServiceTask_1pdls92" targetRef="EndEventAntragPoliciert" />
+    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="ServiceTaskPoliceAusstellen" targetRef="ServiceTaskSendPolicy" />
+    <bpmn2:sequenceFlow id="SequenceFlow_11" name="" sourceRef="ServiceTaskSendPolicy" targetRef="EndEventAntragPoliciert" />
     <bpmn2:serviceTask id="ServiceTaskAblehnungVermerken" name="Ablehnung in Bestandssystem vermerken" camunda:type="external" camunda:topic="rejectPolicy">
       <bpmn2:incoming>SequenceFlow_12</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlowRed</bpmn2:incoming>
@@ -137,7 +137,7 @@
       <bpmn2:outgoing>SequenceFlowRed</bpmn2:outgoing>
     </bpmn2:exclusiveGateway>
     <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="StartEvent_1" targetRef="BusinessRuleTaskAntragAutomatischPruefen" />
-    <bpmn2:sendTask id="ServiceTask_1pdls92" name="Police zuschicken" camunda:type="external" camunda:topic="sendEmail">
+    <bpmn2:sendTask id="ServiceTaskSendPolicy" name="Police zuschicken" camunda:type="external" camunda:topic="sendEmail">
       <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
     </bpmn2:sendTask>
@@ -314,7 +314,7 @@
           <dc:Bounds x="95" y="70" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="SendTask_1gv9cp0_di" bpmnElement="ServiceTask_1pdls92">
+      <bpmndi:BPMNShape id="SendTask_1gv9cp0_di" bpmnElement="ServiceTaskSendPolicy">
         <dc:Bounds x="960" y="30" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="SendTask_07aynak_di" bpmnElement="ServiceTask_02gzh4m">

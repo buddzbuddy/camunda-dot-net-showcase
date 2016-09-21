@@ -1,7 +1,9 @@
 ﻿using CamundaClient.Dto;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using CamundaClient.Requests;
 
 namespace CamundaClient.Service
@@ -20,25 +22,28 @@ namespace CamundaClient.Service
         {
             HttpClient http = helper.HttpClient("external-task/fetchAndLock");
 
-            FetchAndLockRequest request = new FetchAndLockRequest();
-            request.WorkerId = workerId;
-            request.MaxTasks = maxTasks;
-            FetchAndLockTopic topic = new FetchAndLockTopic();
-            topic.TopicName = topicName;
-            topic.LockDuration = lockDurationInMilliseconds;
-            topic.Variables = variablesToFetch;
-            request.Topics.Add(topic);
+            var lockRequest = new FetchAndLockRequest();
+            lockRequest.WorkerId = workerId;
+            lockRequest.MaxTasks = maxTasks;
+            var lockTopic = new FetchAndLockTopic();
+            lockTopic.TopicName = topicName;
+            lockTopic.LockDuration = lockDurationInMilliseconds;
+            lockTopic.Variables = variablesToFetch;
+            lockRequest.Topics.Add(lockTopic);
             try {
-                HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+                var requestContent = new StringContent(JsonConvert.SerializeObject(lockRequest), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+                HttpResponseMessage response = http.PostAsync("", requestContent).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    var tasks = response.Content.ReadAsAsync<IEnumerable<ExternalTask>>().Result;
+                    var tasks = JsonConvert.DeserializeObject<IEnumerable<ExternalTask>>(response.Content.ReadAsStringAsync().Result);
+
                     http.Dispose();
                     return new List<ExternalTask>(tasks);
                 }
                 else
                 {
-                    return new List<ExternalTask>();
+                    http.Dispose();
+                    throw new EngineException("Could not fetch and lock tasks: " + response.ReasonPhrase);
                 }
             }
             catch (Exception ex)
@@ -58,7 +63,8 @@ namespace CamundaClient.Service
             request.WorkerId = workerId;
             request.Variables = CamundaClientHelper.ConvertVariables(variablesToPassToProcess);
 
-            HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            HttpResponseMessage response = http.PostAsync("", requestContent).Result;
             http.Dispose();
             if (!response.IsSuccessStatusCode)
             {
@@ -76,7 +82,8 @@ namespace CamundaClient.Service
             request.Retries = retries;
             request.RetryTimeout = retryTimeout;
 
-            HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            HttpResponseMessage response = http.PostAsync("", requestContent).Result;
             http.Dispose();
             if (!response.IsSuccessStatusCode)
             {

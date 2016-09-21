@@ -1,10 +1,12 @@
 ﻿using CamundaClient.Dto;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using CamundaClient.Requests;
 
@@ -27,7 +29,7 @@ namespace CamundaClient.Service
             HttpResponseMessage response = http.GetAsync("?latestVersion=" + (onlyLatest ? "true" : "false")).Result;
             if (response.IsSuccessStatusCode)
             {
-                var result = response.Content.ReadAsAsync<IEnumerable<ProcessDefinition>>().Result;
+                var result = JsonConvert.DeserializeObject<IEnumerable<ProcessDefinition>>(response.Content.ReadAsStringAsync().Result);
                 http.Dispose();
 
                 // Could be extracted into separate method call if you run a lot of process definitions and want to optimize performance
@@ -35,7 +37,8 @@ namespace CamundaClient.Service
                 {
                     http = helper.HttpClient("process-definition/" + pd.Id + "/startForm");
                     HttpResponseMessage response2 = http.GetAsync("").Result;
-                    var startForm = response2.Content.ReadAsAsync<StartForm>().Result;
+                    var startForm = JsonConvert.DeserializeObject<StartForm>(response2.Content.ReadAsStringAsync().Result);
+
                     pd.StartFormKey = startForm.Key;
                     http.Dispose();
                 }
@@ -49,41 +52,23 @@ namespace CamundaClient.Service
 
         }
 
-        public void AutoDeploy()
+        public void DeleteDeployment(string deploymentId)
         {
-            System.Reflection.Assembly thisExe;
-            thisExe = System.Reflection.Assembly.GetEntryAssembly();
-            string[] resources = thisExe.GetManifestResourceNames();
-
-            if (resources.Length == 0)
+            HttpClient http = helper.HttpClient("deployment/" + deploymentId + "?cascade=true");
+            HttpResponseMessage response = http.DeleteAsync("").Result;
+            if (!response.IsSuccessStatusCode)
             {
-                return;
+                var errorMsg = response.Content.ReadAsStringAsync();
+                http.Dispose();
+                throw new EngineException(response.ReasonPhrase);
             }
+            http.Dispose();
+        }
 
-            // TODO: Verify if this is the correct way of doing it:
-            String assemblyBaseName = thisExe.GetName().Name;
-
-            List<object> files = new List<object>();
-            foreach (string resource in resources)
-            {
-                // TODO Check if Camunda relevant (BPMN, DMN, HTML Forms)
-
-                // Read and add to Form for Deployment
-                Stream resourceAsStream = thisExe.GetManifestResourceStream(resource);
-                byte[] resourceAsBytearray;
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    resourceAsStream.CopyTo(ms);
-                    resourceAsBytearray = ms.ToArray();
-                }
-
-                String fileLocalName = resource.Replace(assemblyBaseName + ".", "");
-                files.Add(new FileParameter(resourceAsBytearray, fileLocalName));
-
-                Console.WriteLine("Adding resource to deployment: " + resource);
-            }
+        public string Deploy(string deploymentName, List<object> files)
+        {
             Dictionary<string, object> postParameters = new Dictionary<string, object>();
-            postParameters.Add("deployment-name", assemblyBaseName);
+            postParameters.Add("deployment-name", deploymentName);
             postParameters.Add("deployment-source", "C# Process Application");
             postParameters.Add("enable-duplicate-filtering", "true");
             postParameters.Add("data", files);
@@ -92,7 +77,37 @@ namespace CamundaClient.Service
             string postURL = helper.RestUrl + "deployment/create";
             HttpWebResponse webResponse = FormUpload.MultipartFormDataPost(postURL, helper.RestUsername, helper.RestPassword, postParameters);
 
-            Console.WriteLine($"Deployment to Camunda BPM succeeded. {webResponse.StatusCode}");
+            using (var reader = new StreamReader(webResponse.GetResponseStream(), Encoding.UTF8))
+            {
+                var deployment = JsonConvert.DeserializeObject<Deployment>(reader.ReadToEnd());
+                return deployment.Id;
+            }
+        }
+
+        public void AutoDeploy()
+        {
+            Assembly thisExe = Assembly.GetEntryAssembly();
+            string[] resources = thisExe.GetManifestResourceNames();
+
+            if (resources.Length == 0)
+            {
+                return;
+            }
+
+            List<object> files = new List<object>();
+            foreach (string resource in resources)
+            {
+                // TODO Check if Camunda relevant (BPMN, DMN, HTML Forms)
+
+                // Read and add to Form for Deployment                
+                files.Add(FileParameter.FromManifestResource(thisExe, resource));
+
+                Console.WriteLine("Adding resource to deployment: " + resource);
+            }
+
+            Deploy(thisExe.GetName().Name, files);
+
+            Console.WriteLine("Deployment to Camunda BPM succeeded.");
 
         }
 

@@ -1,0 +1,88 @@
+<p>
+    Please decide about this insurance application.
+</p>
+<form class="form-horizontal">
+    <script cam-script type="text/form-script">
+    inject([ '$scope', '$http', 'Uri', function($scope, $http, Uri) {
+        camForm.on('variables-fetched', function() {
+            // load deserialized value of risk HashMap to be able to process it in JavaScript
+            $http({
+                    method: 'GET',
+                    url: Uri.appUri('engine://engine/:engine/task/' + camForm.taskId + '/variables/' + 'risk' + '?deserializeValue=true')
+            }).success(function(riskVariable ) {
+                $scope.risk = riskVariable.value;
+            });
+        });
+    }]);
+    </script>
+    <div class="control-group">
+        <label class="control-label">Name</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="name"
+                   cam-variable-type="String"
+                   readonly="true"
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Email</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="email"
+                   cam-variable-type="String"
+                   readonly="true"
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Age</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="age"
+                   cam-variable-type="Integer"
+                   readonly="true"
+                   class="form-control" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Car manufacturer</label>
+        <div class="controls">
+            <select cam-variable-name="carManufacturer"
+                    cam-variable-type="String"
+                    disabled="true">
+                <option>BMW</option>
+                <option>Porsche</option>
+                <option>VW</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Car type</label>
+        <div class="controls">
+            <select cam-variable-name="carType"
+                    cam-variable-type="String"
+                    disabled="true">
+                <option>X3</option>
+                <option>911</option>
+                <option>Golf 5</option>
+            </select>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Identified risk</label>
+        <div class="controls">
+            <input type="text" ng-model="risk.description" readonly="true" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Approve?</label>
+        <div class="controls">
+            <input type="checkbox"
+                   cam-variable-name="approved"
+                   cam-variable-type="Boolean"
+                   name="approved"
+                   class="form-control" />
+        </div>
+    </div>
+</form>
