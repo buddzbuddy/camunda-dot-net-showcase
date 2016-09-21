@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using CamundaClient.Requests;
 
 namespace CamundaClient.Service
 {
@@ -15,18 +16,18 @@ namespace CamundaClient.Service
             this.helper = client;
         }
 
-        public IList<ExternalTask> FetchAndLockTasks(string workerId, int maxTasks, string topicName, long lockDurationInMilliseconds, List<string> variablesToFetch)
+        public IList<ExternalTask> FetchAndLockTasks(string workerId, int maxTasks, string topicName, long lockDurationInMilliseconds, IEnumerable<string> variablesToFetch)
         {
             HttpClient http = helper.HttpClient("external-task/fetchAndLock");
 
             FetchAndLockRequest request = new FetchAndLockRequest();
-            request.workerId = workerId;
-            request.maxTasks = maxTasks;
+            request.WorkerId = workerId;
+            request.MaxTasks = maxTasks;
             FetchAndLockTopic topic = new FetchAndLockTopic();
-            topic.topicName = topicName;
-            topic.lockDuration = lockDurationInMilliseconds;
-            topic.variables = variablesToFetch;
-            request.topics.Add(topic);
+            topic.TopicName = topicName;
+            topic.LockDuration = lockDurationInMilliseconds;
+            topic.Variables = variablesToFetch;
+            request.Topics.Add(topic);
             try {
                 HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
                 if (response.IsSuccessStatusCode)
@@ -43,23 +44,10 @@ namespace CamundaClient.Service
             catch (Exception ex)
             {
                 http.Dispose();
-                // TODO: Handle Exception, add backoff
+                Console.WriteLine(ex.Message);
+                // TODO: Handle Exception, add back off
                 return new List<ExternalTask>();
             }
-        }
-
-        private class FetchAndLockRequest
-        {
-            public string workerId;
-            public int maxTasks;
-            public List<FetchAndLockTopic> topics = new List<FetchAndLockTopic>();
-        }
-
-        private class FetchAndLockTopic
-        {
-            public string topicName;
-            public long lockDuration;
-            public List<string> variables;
         }
 
         public void Complete(string workerId, string externalTaskId, Dictionary<string, object> variablesToPassToProcess)
@@ -67,8 +55,8 @@ namespace CamundaClient.Service
             HttpClient http = helper.HttpClient("external-task/" + externalTaskId + "/complete");
 
             CompleteRequest request = new CompleteRequest();
-            request.workerId = workerId;
-            request.variables = helper.convertVariables(variablesToPassToProcess);
+            request.WorkerId = workerId;
+            request.Variables = CamundaClientHelper.ConvertVariables(variablesToPassToProcess);
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
             http.Dispose();
@@ -83,10 +71,10 @@ namespace CamundaClient.Service
             HttpClient http = helper.HttpClient("external-task/" + externalTaskId + "/failure");
 
             FailureRequest request = new FailureRequest();
-            request.workerId = workerId;
-            request.errorMessage = errorMessage;
-            request.retries = retries;
-            request.retryTimeout = retryTimeout;
+            request.WorkerId = workerId;
+            request.ErrorMessage = errorMessage;
+            request.Retries = retries;
+            request.RetryTimeout = retryTimeout;
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
             http.Dispose();
@@ -95,19 +83,5 @@ namespace CamundaClient.Service
                 throw new EngineException("Could not report failure for external Task: " + response.ReasonPhrase);
             }
         }
-
-        private class CompleteRequest
-        {
-            public Dictionary<string, Variable> variables { get; set; }
-            public string workerId { get; set; }
-        }
-        private class FailureRequest
-        {
-            public string workerId { get; set; }
-            public string errorMessage { get; set; }
-            public int retries { get; set; }
-            public long retryTimeout{ get; set; }
-        }
     }
-
 }

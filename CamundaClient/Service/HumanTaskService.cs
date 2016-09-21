@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using CamundaClient.Requests;
 
 namespace CamundaClient.Service
 {
@@ -50,9 +51,9 @@ namespace CamundaClient.Service
                 Dictionary < string, object>  variables = new Dictionary<string, object>();
                 foreach (var variable in variableResponse)
                 {
-                    if (variable.Value.type=="object")
+                    if (variable.Value.Type=="object")
                     {
-                        string stringValue = (string)variable.Value.value;
+                        string stringValue = (string)variable.Value.Value;
                         // lets assume we only work with JSON serialized values 
                         stringValue = stringValue.Remove(stringValue.Length - 1).Remove(0, 1); // remove one bracket from {{ and }}
                         JToken jsonObject = JContainer.Parse(stringValue);
@@ -60,7 +61,7 @@ namespace CamundaClient.Service
                         variables.Add(variable.Key, jsonObject);
                     }
                     else { 
-                        variables.Add(variable.Key, variable.Value.value);
+                        variables.Add(variable.Key, variable.Value.Value);
                     }
                 }
                 http.Dispose();
@@ -73,23 +74,17 @@ namespace CamundaClient.Service
             }
         }
 
-        private class CompleteTaskRequest
-        {
-            public Dictionary<string, Variable> variables;
-        }
-
-
         public void Complete(String taskId, Dictionary<string, object> variables)
         {
             HttpClient http = helper.HttpClient("task/" + taskId + "/complete");
 
-            CompleteTaskRequest request = new CompleteTaskRequest();
-            request.variables = helper.convertVariables(variables);
+            var request = new CompleteRequest();
+            request.Variables = CamundaClientHelper.ConvertVariables(variables);
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
             if (!response.IsSuccessStatusCode)
             {
-                var errorMsg = response.Content.ReadAsStringAsync();
+                //var errorMsg = response.Content.ReadAsStringAsync();
                 http.Dispose();
                 throw new EngineException(response.ReasonPhrase);
             }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using CamundaClient.Requests;
 
 namespace CamundaClient.Service
 {
@@ -15,29 +16,23 @@ namespace CamundaClient.Service
             this.helper = client;
         }
 
-        private class StartProcessInstanceRequest
-        {
-            public Dictionary<string, Variable> variables;
-        }
-
-
         public string StartProcessInstance(String processDefinitionKey, Dictionary<string, object> variables)
         {
             HttpClient http = helper.HttpClient("process-definition/key/" + processDefinitionKey + "/start");
 
-            StartProcessInstanceRequest request = new StartProcessInstanceRequest();
-            request.variables = helper.convertVariables(variables);
+            var request = new CompleteRequest();
+            request.Variables = CamundaClientHelper.ConvertVariables(variables);
 
             HttpResponseMessage response = http.PostAsJsonAsync("", request).Result;
             if (response.IsSuccessStatusCode)
             {
                 var processInstance = response.Content.ReadAsAsync<ProcessInstance>().Result;
                 http.Dispose();
-                return processInstance.id;
+                return processInstance.Id;
             }
             else
             {
-                var errorMsg = response.Content.ReadAsStringAsync();
+                //var errorMsg = response.Content.ReadAsStringAsync();
                 http.Dispose();
                 throw new EngineException(response.ReasonPhrase);
             }
@@ -57,7 +52,7 @@ namespace CamundaClient.Service
                 Dictionary<string, object> variables = new Dictionary<string, object>();
                 foreach (var variable in variableResponse)
                 {
-                    variables.Add(variable.Key, variable.Value.value);
+                    variables.Add(variable.Key, variable.Value.Value);
                 }
                 http.Dispose();
                 return variables;
