@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CamundaClient.Dto
 {
-    class FetchAndLockTopic
+    public class FetchAndLockTopic
     {
         public string TopicName { get; set; }
         public long LockDuration { get; set; }

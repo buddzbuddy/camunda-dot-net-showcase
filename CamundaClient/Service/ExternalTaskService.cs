@@ -21,19 +21,29 @@ namespace CamundaClient.Service
 
         public IList<ExternalTask> FetchAndLockTasks(string workerId, int maxTasks, string topicName, long lockDurationInMilliseconds, IEnumerable<string> variablesToFetch)
         {
-            var http = helper.HttpClient("external-task/fetchAndLock");
 
-            var lockRequest = new FetchAndLockRequest();
-            lockRequest.WorkerId = workerId;
-            lockRequest.MaxTasks = maxTasks;
-            var lockTopic = new FetchAndLockTopic();
-            lockTopic.TopicName = topicName;
-            lockTopic.LockDuration = lockDurationInMilliseconds;
-            lockTopic.Variables = variablesToFetch;
+            var lockRequest = new FetchAndLockRequest
+            {
+                WorkerId = workerId,
+                MaxTasks = maxTasks
+            };
+            var lockTopic = new FetchAndLockTopic
+            {
+                TopicName = topicName,
+                LockDuration = lockDurationInMilliseconds,
+                Variables = variablesToFetch
+            };
             lockRequest.Topics.Add(lockTopic);
+
+            return FetchAndLockTasks(lockRequest);
+        }
+
+        public IList<ExternalTask> FetchAndLockTasks(FetchAndLockRequest fetchAndLockRequest)
+        {
+            var http = helper.HttpClient("external-task/fetchAndLock");
             try
             {
-                var requestContent = new StringContent(JsonConvert.SerializeObject(lockRequest), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+                var requestContent = new StringContent(JsonConvert.SerializeObject(fetchAndLockRequest), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
                 var response = http.PostAsync("", requestContent).Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -55,35 +65,6 @@ namespace CamundaClient.Service
                 // TODO: Handle Exception, add back off
                 return new List<ExternalTask>();
             }
-        }
-
-        public async Task<IEnumerable<ExternalTask>> FetchTasks(string topicName, int? maxTasks)
-        {
-            IEnumerable<ExternalTask> result = null;
-            var http = helper.HttpClient("external-task");
-            try
-            {
-                var response = await http.GetAsync($"?topicName={topicName}&maxResults={maxTasks ?? 10}");
-                if (response.IsSuccessStatusCode)
-                {
-                    result = JsonConvert.DeserializeObject<IEnumerable<ExternalTask>>(await response.Content.ReadAsStringAsync());
-
-                }
-                else
-                {
-                    throw new EngineException("Could not fetch tasks: " + response.ReasonPhrase);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                http.Dispose();
-            }
-
-            return result;
         }
 
         public void Complete(string workerId, string externalTaskId, Dictionary<string, object> variablesToPassToProcess)
