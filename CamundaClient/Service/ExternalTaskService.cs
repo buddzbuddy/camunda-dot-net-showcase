@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using CamundaClient.Requests;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 
 namespace CamundaClient.Service
 {
@@ -43,7 +44,7 @@ namespace CamundaClient.Service
             var http = helper.HttpClient("external-task/fetchAndLock");
             try
             {
-                var requestContent = new StringContent(JsonConvert.SerializeObject(fetchAndLockRequest), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+                var requestContent = new StringContent(JsonConvert.SerializeObject(fetchAndLockRequest, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
                 var response = http.PostAsync("", requestContent).Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -75,7 +76,7 @@ namespace CamundaClient.Service
             request.WorkerId = workerId;
             request.Variables = CamundaClientHelper.ConvertVariables(variablesToPassToProcess);
 
-            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
             var response = http.PostAsync("", requestContent).Result;
             http.Dispose();
             if (!response.IsSuccessStatusCode)
@@ -94,7 +95,7 @@ namespace CamundaClient.Service
             request.Retries = retries;
             request.RetryTimeout = retryTimeout;
 
-            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
             var response = http.PostAsync("", requestContent).Result;
             http.Dispose();
             if (!response.IsSuccessStatusCode)

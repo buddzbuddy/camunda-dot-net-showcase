@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using CamundaClient.Requests;
 using System.Text;
+using Newtonsoft.Json.Serialization;
 
 namespace CamundaClient.Service
 {
@@ -28,7 +29,7 @@ namespace CamundaClient.Service
             request.Variables = CamundaClientHelper.ConvertVariables(variables);
             request.BusinessKey = businessKey;
 
-            var requestContent = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
             var response = http.PostAsync("", requestContent).Result;
             if (response.IsSuccessStatusCode)
             {
