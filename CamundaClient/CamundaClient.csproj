@@ -59,6 +59,7 @@
     <Compile Include="Dto\ExternalTaskWorkerInfo.cs" />
     <Compile Include="Dto\FetchAndLockTopic.cs" />
     <Compile Include="Dto\FileParameter.cs" />
+    <Compile Include="Dto\ProcessDefinitionXml.cs" />
     <Compile Include="Dto\StartForm.cs" />
     <Compile Include="Dto\Deployment.cs" />
     <Compile Include="EngineException.cs" />

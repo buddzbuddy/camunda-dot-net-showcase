@@ -52,6 +52,24 @@ namespace CamundaClient.Service
 
         }
 
+
+        public String LoadProcessDefinitionXml(String processDefinitionId)
+        {
+            var http = helper.HttpClient("process-definition/" + processDefinitionId + "/xml");
+            HttpResponseMessage response = http.GetAsync("").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                ProcessDefinitionXml processDefinitionXml = JsonConvert.DeserializeObject<ProcessDefinitionXml>(response.Content.ReadAsStringAsync().Result);
+                http.Dispose();
+                return processDefinitionXml.Bpmn20Xml;
+            }
+            else
+            {
+                http.Dispose();
+                return null;
+            }            
+        }
+
         public void DeleteDeployment(string deploymentId)
         {
             HttpClient http = helper.HttpClient("deployment/" + deploymentId + "?cascade=true");
