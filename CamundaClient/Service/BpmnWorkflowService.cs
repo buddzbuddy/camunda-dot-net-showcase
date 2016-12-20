@@ -6,6 +6,7 @@ using System.Net.Http;
 using CamundaClient.Requests;
 using System.Text;
 using Newtonsoft.Json.Serialization;
+using System.Linq;
 
 namespace CamundaClient.Service
 {
@@ -71,6 +72,29 @@ namespace CamundaClient.Service
                 throw new EngineException("Could not load variable: " + response.ReasonPhrase);
             }
         }
+
+        public IList<ProcessInstance> LoadProcessInstances(IDictionary<string, string> queryParameters)
+        {
+            var queryString = string.Join("&", queryParameters.Select(x => x.Key + "=" + x.Value));
+            var http = helper.HttpClient("process-instance/?" + queryString);
+
+            var response = http.GetAsync("").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                // Successful - parse the response body
+                var instances = JsonConvert.DeserializeObject<IEnumerable<ProcessInstance>>(response.Content.ReadAsStringAsync().Result);
+                http.Dispose();
+                return new List<ProcessInstance>(instances);
+            }
+            else
+            {
+                //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+                http.Dispose();
+                throw new EngineException("Could not load process instances: " + response.ReasonPhrase);
+            }
+
+        }
+
     }
 
 

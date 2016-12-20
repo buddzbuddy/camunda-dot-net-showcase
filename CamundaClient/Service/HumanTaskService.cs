@@ -40,7 +40,7 @@ namespace CamundaClient.Service
             {
                 //Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
                 http.Dispose();
-                throw new EngineException("Could not fetch and lock tasks: " + response.ReasonPhrase);
+                throw new EngineException("Could not load tasks: " + response.ReasonPhrase);
             }
 
         }
