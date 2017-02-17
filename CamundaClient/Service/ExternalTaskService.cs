@@ -64,7 +64,7 @@ namespace CamundaClient.Service
                 http.Dispose();
                 Console.WriteLine(ex.Message);
                 // TODO: Handle Exception, add back off
-                return new List<ExternalTask>();
+                throw;
             }
         }
 
