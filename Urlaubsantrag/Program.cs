@@ -1,8 +1,7 @@
 ﻿using System;
 using CamundaClient;
-using System.Collections.Generic;
 
-namespace VacationRequestProcess
+namespace Urlaubsantrag
 {
     class Program
     {

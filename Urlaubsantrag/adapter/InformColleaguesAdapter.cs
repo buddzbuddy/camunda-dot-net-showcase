@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CamundaClient.Dto;
 using CamundaClient.Worker;
 
-namespace VacationRequestProcess.adapter
+namespace Urlaubsantrag.adapter
 {
     [ExternalTaskTopic("informColleagues")]
     [ExternalTaskVariableRequirements("name", "startDate", "duration")]

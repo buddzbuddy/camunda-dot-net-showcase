@@ -1,13 +1,11 @@
 ﻿using CamundaClient;
-using CamundaClient.Service;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using CamundaClient.Dto;
 
-namespace VacationRequestProcess
+namespace Urlaubsantrag
 {
     [TestFixture]
     class CalculationProcessTest
@@ -43,12 +41,18 @@ namespace VacationRequestProcess
                 });
 
 
-                var externalTasks = camunda.ExternalTaskService.FetchAndLockTasks("testcase", 100, "leaveAccount", 1000, new List<string>() { "name" });
-                Assert.AreEqual(1, externalTasks.Count);
-                Assert.AreEqual("ServiceTask_UrlaubstageAbbuchen", externalTasks.First().ActivityId);
-                Assert.AreEqual("Bernd Rücker", externalTasks.First().Variables["name"].Value);
+                var externalTasks = camunda.ExternalTaskService.FetchAndLockTasks(
+                    "worker1", 
+                    100, 
+                    "leaveAccount", 
+                    1000, 
+                    new List<string>() { "name" });
 
-                camunda.ExternalTaskService.Complete("testcase", externalTasks.First().Id, new Dictionary<string, object>());
+                // Do the real service logic / calls
+
+                camunda.ExternalTaskService.Complete("worker1", externalTasks.First().Id, new Dictionary<string, object>() {
+                    { "someResult", 42 }
+                });
 
                 // TODO: Simulate timer
                 //externalTasks = camunda.ExternalTaskService.FetchAndLockTasks("testcase", 100, "informColleagues", 1000, new List<string>());
