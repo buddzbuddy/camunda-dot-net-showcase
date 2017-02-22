@@ -6,7 +6,7 @@ A class library named "Camunda Client" is contained, which can serve as a basis 
 
 # Run the examples
 
-* Make sure you have a Java Runtime on your machine (
+* Make sure you have a Java Runtime on your machine (or [download and install Java](https://java.com/de/download/)).
 * Download the [Community Edition of Camunda as Tomcat distribution](https://camunda.org/download/) (or any other distribution if you have a preference). Alternatively you might prefer to [try out the enterprise edition](https://camunda.com/trial/). 
 * Unzip the distribution and start it using the batch file provided in the root folder.
 * Clone or download the project provided in this GitHub repository and open it in Visual Studio
