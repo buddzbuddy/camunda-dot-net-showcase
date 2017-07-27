@@ -85,6 +85,23 @@ namespace CamundaClient.Service
             }
         }
 
+        public void Error(string workerId, string externalTaskId, string errorCode)
+        {
+            var http = helper.HttpClient("external-task/" + externalTaskId + "/bpmnError");
+
+            var request = new BpmnErrorRequest();
+            request.WorkerId = workerId;
+            request.ErrorCode = errorCode;
+
+            var requestContent = new StringContent(JsonConvert.SerializeObject(request, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
+            var response = http.PostAsync("", requestContent).Result;
+            http.Dispose();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new EngineException("Could not report BPMN error for external Task: " + response.ReasonPhrase);
+            }
+        }
+
         public void Failure(string workerId, string externalTaskId, string errorMessage, int retries, long retryTimeout)
         {
             var http = helper.HttpClient("external-task/" + externalTaskId + "/failure");

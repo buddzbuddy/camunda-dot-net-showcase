@@ -69,7 +69,7 @@ namespace CamundaClient
                     TopicName = externalTaskTopicAttribute.TopicName,
                     Retries = externalTaskTopicAttribute.Retries,
                     RetryTimeout = externalTaskTopicAttribute.RetryTimeout,
-                    VariablesToFetch = new List<string>(externalTaskVariableRequirements?.VariablesToFetch),
+                    VariablesToFetch = externalTaskVariableRequirements?.VariablesToFetch,
                     TaskAdapter = t.GetConstructor(Type.EmptyTypes)?.Invoke(null) as IExternalTaskAdapter
                 };
             return externalTaskWorkers;

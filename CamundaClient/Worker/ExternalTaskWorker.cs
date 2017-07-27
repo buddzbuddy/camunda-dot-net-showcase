@@ -29,7 +29,7 @@ namespace CamundaClient.Worker
         {
             // Query External Tasks
             try {
-                var tasks = externalTaskService.FetchAndLockTasks(workerId, maxTasksToFetchAtOnce, taskWorkerInfo.TopicName, lockDurationInMilliseconds, new List<string>(taskWorkerInfo.VariablesToFetch));
+                var tasks = externalTaskService.FetchAndLockTasks(workerId, maxTasksToFetchAtOnce, taskWorkerInfo.TopicName, lockDurationInMilliseconds, taskWorkerInfo.VariablesToFetch);
 
                 // run them in parallel with a max degree of parallelism
                 Parallel.ForEach(
@@ -58,6 +58,11 @@ namespace CamundaClient.Worker
                 taskWorkerInfo.TaskAdapter.Execute(externalTask, ref resultVariables);
                 Console.WriteLine($"...finished External Task {externalTask.Id}");
                 externalTaskService.Complete(workerId, externalTask.Id, resultVariables);
+            }
+            catch (UnrecoverableException ex)
+            {
+                Console.WriteLine($"...failed unrecoverable External Task  {externalTask.Id}");
+                externalTaskService.Error(workerId, externalTask.Id, ex.BusinessErrorCode);
             }
             catch (Exception ex)
             {
