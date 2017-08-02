@@ -20,21 +20,28 @@ namespace CamundaClient.Service
             this.helper = client;
         }
 
-        public IList<ExternalTask> FetchAndLockTasks(string workerId, int maxTasks, string topicName, long lockDurationInMilliseconds, IEnumerable<string> variablesToFetch)
-        {
+        public IList<ExternalTask> FetchAndLockTasks(string workerId, int maxTasks, string topicName, long lockDurationInMilliseconds, IEnumerable<string> variablesToFetch = null)
+        { 
+            return FetchAndLockTasks(workerId, maxTasks, new List<string> { topicName }, lockDurationInMilliseconds, variablesToFetch);
+        }
 
+        public IList<ExternalTask> FetchAndLockTasks(string workerId, int maxTasks, IEnumerable<string> topicNames, long lockDurationInMilliseconds, IEnumerable<string> variablesToFetch = null)
+        {
             var lockRequest = new FetchAndLockRequest
             {
                 WorkerId = workerId,
                 MaxTasks = maxTasks
             };
-            var lockTopic = new FetchAndLockTopic
+            foreach (var topicName in topicNames)
             {
-                TopicName = topicName,
-                LockDuration = lockDurationInMilliseconds,
-                Variables = variablesToFetch
-            };
-            lockRequest.Topics.Add(lockTopic);
+                var lockTopic = new FetchAndLockTopic
+                {
+                    TopicName = topicName,
+                    LockDuration = lockDurationInMilliseconds,
+                    Variables = variablesToFetch
+                };
+                lockRequest.Topics.Add(lockTopic);
+            }
 
             return FetchAndLockTasks(lockRequest);
         }
@@ -68,7 +75,7 @@ namespace CamundaClient.Service
             }
         }
 
-        public void Complete(string workerId, string externalTaskId, Dictionary<string, object> variablesToPassToProcess)
+        public void Complete(string workerId, string externalTaskId, Dictionary<string, object> variablesToPassToProcess = null)
         {
             var http = helper.HttpClient("external-task/" + externalTaskId + "/complete");
 
