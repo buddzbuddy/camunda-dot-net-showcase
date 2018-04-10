@@ -2,11 +2,11 @@
 
 namespace CamundaClient.Worker
 {
-    public class UnrecoverableException : Exception
+    public class UnrecoverableBusinessErrorException : Exception
     {
         public string BusinessErrorCode { get; set; }
         
-        public UnrecoverableException(string businessErrorCode, string message)
+        public UnrecoverableBusinessErrorException(string businessErrorCode, string message)
         : base(message)
         {
             BusinessErrorCode = businessErrorCode;

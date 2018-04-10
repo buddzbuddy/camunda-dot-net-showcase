@@ -59,9 +59,9 @@ namespace CamundaClient.Worker
                 Console.WriteLine($"...finished External Task {externalTask.Id}");
                 externalTaskService.Complete(workerId, externalTask.Id, resultVariables);
             }
-            catch (UnrecoverableException ex)
+            catch (UnrecoverableBusinessErrorException ex)
             {
-                Console.WriteLine($"...failed unrecoverable External Task  {externalTask.Id}");
+                Console.WriteLine($"...failed with business error code from External Task  {externalTask.Id}");
                 externalTaskService.Error(workerId, externalTask.Id, ex.BusinessErrorCode);
             }
             catch (Exception ex)
