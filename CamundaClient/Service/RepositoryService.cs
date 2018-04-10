@@ -25,28 +25,25 @@ namespace CamundaClient.Service
 
         public List<ProcessDefinition> LoadProcessDefinitions(bool onlyLatest)
         {
-            var http = helper.HttpClient("process-definition/");
-            HttpResponseMessage response = http.GetAsync("?latestVersion=" + (onlyLatest ? "true" : "false")).Result;
+            var http = helper.HttpClient();
+            HttpResponseMessage response = http.GetAsync("process-definition/?latestVersion=" + (onlyLatest ? "true" : "false")).Result;
             if (response.IsSuccessStatusCode)
             {
                 var result = JsonConvert.DeserializeObject<IEnumerable<ProcessDefinition>>(response.Content.ReadAsStringAsync().Result);
-                http.Dispose();
 
                 // Could be extracted into separate method call if you run a lot of process definitions and want to optimize performance
                 foreach (ProcessDefinition pd in result)
                 {
-                    http = helper.HttpClient("process-definition/" + pd.Id + "/startForm");
-                    HttpResponseMessage response2 = http.GetAsync("").Result;
+                    http = helper.HttpClient();
+                    HttpResponseMessage response2 = http.GetAsync("process-definition/" + pd.Id + "/startForm").Result;
                     var startForm = JsonConvert.DeserializeObject<StartForm>(response2.Content.ReadAsStringAsync().Result);
 
                     pd.StartFormKey = startForm.Key;
-                    http.Dispose();
                 }
                 return new List<ProcessDefinition>(result);
             }
             else
             {
-                http.Dispose();
                 return new List<ProcessDefinition>();
             }
 
@@ -55,32 +52,28 @@ namespace CamundaClient.Service
 
         public String LoadProcessDefinitionXml(String processDefinitionId)
         {
-            var http = helper.HttpClient("process-definition/" + processDefinitionId + "/xml");
-            HttpResponseMessage response = http.GetAsync("").Result;
+            var http = helper.HttpClient();
+            HttpResponseMessage response = http.GetAsync("process-definition/" + processDefinitionId + "/xml").Result;
             if (response.IsSuccessStatusCode)
             {
                 ProcessDefinitionXml processDefinitionXml = JsonConvert.DeserializeObject<ProcessDefinitionXml>(response.Content.ReadAsStringAsync().Result);
-                http.Dispose();
                 return processDefinitionXml.Bpmn20Xml;
             }
             else
             {
-                http.Dispose();
                 return null;
             }            
         }
 
         public void DeleteDeployment(string deploymentId)
         {
-            HttpClient http = helper.HttpClient("deployment/" + deploymentId + "?cascade=true");
-            HttpResponseMessage response = http.DeleteAsync("").Result;
+            HttpClient http = helper.HttpClient();
+            HttpResponseMessage response = http.DeleteAsync("deployment/" + deploymentId + "?cascade=true").Result;
             if (!response.IsSuccessStatusCode)
             {
                 var errorMsg = response.Content.ReadAsStringAsync();
-                http.Dispose();
                 throw new EngineException(response.ReasonPhrase);
             }
-            http.Dispose();
         }
 
         public string Deploy(string deploymentName, List<object> files)

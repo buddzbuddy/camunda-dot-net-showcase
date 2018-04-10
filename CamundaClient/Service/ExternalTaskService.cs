@@ -32,6 +32,10 @@ namespace CamundaClient.Service
                 WorkerId = workerId,
                 MaxTasks = maxTasks
             };
+            //if (longPolling)
+            //{
+            //    lockRequest.AsyncResponseTimeout = 1 * 60 * 1000; // 1 minute
+            //}
             foreach (var topicName in topicNames)
             {
                 var lockTopic = new FetchAndLockTopic
@@ -48,44 +52,39 @@ namespace CamundaClient.Service
 
         public IList<ExternalTask> FetchAndLockTasks(FetchAndLockRequest fetchAndLockRequest)
         {
-            var http = helper.HttpClient("external-task/fetchAndLock");
+            var http = helper.HttpClient();
             try
             {
                 var requestContent = new StringContent(JsonConvert.SerializeObject(fetchAndLockRequest, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
-                var response = http.PostAsync("", requestContent).Result;
+                var response = http.PostAsync("external-task/fetchAndLock", requestContent).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     var tasks = JsonConvert.DeserializeObject<IEnumerable<ExternalTask>>(response.Content.ReadAsStringAsync().Result);
-
-                    http.Dispose();
                     return new List<ExternalTask>(tasks);
                 }
                 else
                 {
-                    http.Dispose();
                     throw new EngineException("Could not fetch and lock tasks: " + response.ReasonPhrase);
                 }
             }
             catch (Exception ex)
             {
-                http.Dispose();
                 Console.WriteLine(ex.Message);
                 // TODO: Handle Exception, add back off
                 throw;
             }
-        }
+        }    
 
         public void Complete(string workerId, string externalTaskId, Dictionary<string, object> variablesToPassToProcess = null)
         {
-            var http = helper.HttpClient("external-task/" + externalTaskId + "/complete");
+            var http = helper.HttpClient();
 
             var request = new CompleteRequest();
             request.WorkerId = workerId;
             request.Variables = CamundaClientHelper.ConvertVariables(variablesToPassToProcess);
 
             var requestContent = new StringContent(JsonConvert.SerializeObject(request, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
-            var response = http.PostAsync("", requestContent).Result;
-            http.Dispose();
+            var response = http.PostAsync("external-task/" + externalTaskId + "/complete", requestContent).Result;
             if (!response.IsSuccessStatusCode)
             {
                 throw new EngineException("Could not complete external Task: " + response.ReasonPhrase);
@@ -94,15 +93,14 @@ namespace CamundaClient.Service
 
         public void Error(string workerId, string externalTaskId, string errorCode)
         {
-            var http = helper.HttpClient("external-task/" + externalTaskId + "/bpmnError");
+            var http = helper.HttpClient();
 
             var request = new BpmnErrorRequest();
             request.WorkerId = workerId;
             request.ErrorCode = errorCode;
 
             var requestContent = new StringContent(JsonConvert.SerializeObject(request, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
-            var response = http.PostAsync("", requestContent).Result;
-            http.Dispose();
+            var response = http.PostAsync("external-task/" + externalTaskId + "/bpmnError", requestContent).Result;
             if (!response.IsSuccessStatusCode)
             {
                 throw new EngineException("Could not report BPMN error for external Task: " + response.ReasonPhrase);
@@ -111,7 +109,7 @@ namespace CamundaClient.Service
 
         public void Failure(string workerId, string externalTaskId, string errorMessage, int retries, long retryTimeout)
         {
-            var http = helper.HttpClient("external-task/" + externalTaskId + "/failure");
+            var http = helper.HttpClient();
 
             var request = new FailureRequest();
             request.WorkerId = workerId;
@@ -120,8 +118,7 @@ namespace CamundaClient.Service
             request.RetryTimeout = retryTimeout;
 
             var requestContent = new StringContent(JsonConvert.SerializeObject(request, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }), Encoding.UTF8, CamundaClientHelper.CONTENT_TYPE_JSON);
-            var response = http.PostAsync("", requestContent).Result;
-            http.Dispose();
+            var response = http.PostAsync("external-task/" + externalTaskId + "/failure", requestContent).Result;
             if (!response.IsSuccessStatusCode)
             {
                 throw new EngineException("Could not report failure for external Task: " + response.ReasonPhrase);

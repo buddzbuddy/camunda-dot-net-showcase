@@ -13,5 +13,6 @@ namespace CamundaClient.Requests
         public int MaxTasks { get; set; }
         public bool UsePriority { get; set; }
         public List<FetchAndLockTopic> Topics { get; set; } = new List<FetchAndLockTopic>();
+        public long AsyncResponseTimeout { get; set;  }
     }
 }

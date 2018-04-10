@@ -15,6 +15,8 @@ namespace CamundaClient
         public string RestUsername { get; }
         public string RestPassword { get; }
 
+        private static HttpClient client;
+
         public CamundaClientHelper(Uri restUrl, string username, string password)
         {
             this.RestUrl = restUrl;
@@ -22,22 +24,23 @@ namespace CamundaClient
             this.RestPassword = password;
         }
 
-        public HttpClient HttpClient(string path)
+        public HttpClient HttpClient()
         {
-            HttpClient client = null;
-            if (RestUsername != null)
+            if (client == null)
             {
-                var credentials = new NetworkCredential(RestUsername, RestPassword);
-                client = new HttpClient(new HttpClientHandler() { Credentials = credentials });
+                if (RestUsername != null)
+                {
+                    var credentials = new NetworkCredential(RestUsername, RestPassword);
+                    client = new HttpClient(new HttpClientHandler() { Credentials = credentials });
+                }
+                else
+                {
+                    client = new HttpClient();
+                }
+                // Add an Accept header for JSON format.
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(CONTENT_TYPE_JSON));
+                client.BaseAddress = RestUrl;
             }
-            else
-            {
-                client = new HttpClient();
-            }
-            client.BaseAddress = new Uri(RestUrl + path);
-
-            // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(CONTENT_TYPE_JSON));
 
             return client;
         }
