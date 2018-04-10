@@ -4,6 +4,10 @@ You do not need to code Java in order to develop on Camunda BPM. This Showcase d
 
 A class library named "Camunda Client" is contained, which can serve as a basis for your own projects using Camunda. It abstracts the details of remote communication with the Camunda BPM Platform.
 
+# Camunda introduction blog posts
+
+* [Use Camunda without touching Java and get an easy-to-use REST-based orchestration and workflow engine](https://blog.bernd-ruecker.com/use-camunda-without-touching-java-and-get-an-easy-to-use-rest-based-orchestration-and-workflow-7bdf25ac198e)
+
 # Run the examples
 
 * Make sure you have a Java Runtime on your machine (or [download and install Java](https://java.com/de/download/)).
