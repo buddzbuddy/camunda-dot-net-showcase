@@ -4,10 +4,10 @@ using System.Runtime.InteropServices;
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
-[assembly: AssemblyTitle("CamundaClient")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Camunda Client Sample")]
+[assembly: AssemblyDescription("A small sample client library around the Camunda 7.x REST API to be used within C# applications. This is meant to be an example and serve as a starting point to copy the code - it is unsupported and not meant for production use.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Camunda")]
+[assembly: AssemblyCompany("Bernd Ruecker")]
 [assembly: AssemblyProduct("CamundaClient")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
