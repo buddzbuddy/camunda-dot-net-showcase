@@ -83,7 +83,7 @@
     <Compile Include="Service\HumanTaskService.cs" />
     <Compile Include="Dto\HumanTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Worker\UnrecoverableException.cs" />
+    <Compile Include="Worker\UnrecoverableBusinessErrorException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
