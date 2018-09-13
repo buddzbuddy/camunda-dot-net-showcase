@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.16.2">
   <bpmn:process id="calculate" name="Simple Calculate" isExecutable="true">
-    <bpmn:startEvent id="StartEvent" name="Calculation&#10;requested">
+    <bpmn:startEvent id="StartEvent" name="Calculation&#10;requested" camunda:formKey="embedded:deployment:Forms.start-form.html">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="x" label="First Number (&#39;x&#39;)" type="long" />
@@ -13,22 +13,34 @@
     <bpmn:sequenceFlow id="SequenceFlow_1ap1fum" sourceRef="StartEvent" targetRef="ServiceTaskCalculate" />
     <bpmn:serviceTask id="ServiceTaskCalculate" name="Calculate" camunda:type="external" camunda:topic="calculate">
       <bpmn:incoming>SequenceFlow_1ap1fum</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1rm1qjm</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_12fydvg</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_1rm1qjm" sourceRef="ServiceTaskCalculate" targetRef="UserTaskReviewResult" />
-    <bpmn:userTask id="UserTaskReviewResult" name="Review result">
+    <bpmn:userTask id="UserTaskReviewResult" name="Review result" camunda:formKey="embedded:deployment:Forms.result.html">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="result" label="Calculation Result" type="long" />
         </camunda:formData>
       </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_1rm1qjm</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0h11sd1</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1t0tmo6</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:endEvent id="EndEvent" name="Calculation&#10;finished">
       <bpmn:incoming>SequenceFlow_1t0tmo6</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1t33192</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1t0tmo6" sourceRef="UserTaskReviewResult" targetRef="EndEvent" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0izw2t8">
+      <bpmn:incoming>SequenceFlow_12fydvg</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1t33192</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0h11sd1</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_12fydvg" sourceRef="ServiceTaskCalculate" targetRef="ExclusiveGateway_0izw2t8" />
+    <bpmn:sequenceFlow id="SequenceFlow_1t33192" sourceRef="ExclusiveGateway_0izw2t8" targetRef="EndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{result == 50}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_0h11sd1" sourceRef="ExclusiveGateway_0izw2t8" targetRef="UserTaskReviewResult">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{result != 50}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="calculate">
@@ -39,8 +51,8 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1ap1fum_di" bpmnElement="SequenceFlow_1ap1fum">
-        <di:waypoint xsi:type="dc:Point" x="191" y="145" />
-        <di:waypoint xsi:type="dc:Point" x="314" y="145" />
+        <di:waypoint x="191" y="145" />
+        <di:waypoint x="314" y="145" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="170.5" y="135" width="90" height="20" />
         </bpmndi:BPMNLabel>
@@ -48,13 +60,6 @@
       <bpmndi:BPMNShape id="ServiceTask_1jseq4k_di" bpmnElement="ServiceTaskCalculate">
         <dc:Bounds x="314" y="105" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_1rm1qjm_di" bpmnElement="SequenceFlow_1rm1qjm">
-        <di:waypoint xsi:type="dc:Point" x="414" y="145" />
-        <di:waypoint xsi:type="dc:Point" x="500" y="145" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="475" y="135" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_1tp1pqp_di" bpmnElement="UserTaskReviewResult">
         <dc:Bounds x="500" y="105" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -65,11 +70,27 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1t0tmo6_di" bpmnElement="SequenceFlow_1t0tmo6">
-        <di:waypoint xsi:type="dc:Point" x="600" y="145" />
-        <di:waypoint xsi:type="dc:Point" x="687" y="145" />
+        <di:waypoint x="600" y="145" />
+        <di:waypoint x="687" y="145" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="623" y="135" width="90" height="20" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0izw2t8_di" bpmnElement="ExclusiveGateway_0izw2t8" isMarkerVisible="true">
+        <dc:Bounds x="339" y="244" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_12fydvg_di" bpmnElement="SequenceFlow_12fydvg">
+        <di:waypoint x="364" y="185" />
+        <di:waypoint x="364" y="244" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1t33192_di" bpmnElement="SequenceFlow_1t33192">
+        <di:waypoint x="383" y="275" />
+        <di:waypoint x="586" y="338" />
+        <di:waypoint x="696" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0h11sd1_di" bpmnElement="SequenceFlow_0h11sd1">
+        <di:waypoint x="385" y="265" />
+        <di:waypoint x="501" y="180" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

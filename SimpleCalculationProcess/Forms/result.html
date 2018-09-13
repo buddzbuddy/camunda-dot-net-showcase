@@ -7,21 +7,30 @@
 </p>
 
 <form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label">Name</label>
+        <div class="controls">
+            <input type="text"
+                   cam-variable-name="name"
+                   readonly="readonly"
+                   class="form-control" />
+        </div>
+    </div>
   <div class="control-group">
     <label class="control-label">Result</label>
     <div class="controls">
-      <input type="text" 
+      <input type="number" 
              cam-variable-name="result"
-             readonly="true" 
+             readonly="readonly" 
              class="form-control" />      
     </div>
   </div>
     <div class="control-group">
         <label class="control-label">X</label>
         <div class="controls">
-            <input type="text"
+            <input type="number"
                    cam-variable-name="x"
-                   readonly="true"
+                   readonly="readonly"
                    class="form-control" />
         </div>
     </div>
@@ -29,9 +38,9 @@
     <div class="control-group">
         <label class="control-label">Y</label>
         <div class="controls">
-            <input type="text"
+            <input type="number"
                    cam-variable-name="y"
-                   readonly="true"
+                   readonly="readonly"
                    class="form-control" />
         </div>
     </div>
